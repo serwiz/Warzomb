@@ -118,7 +118,7 @@ Nous avons notés les principales questions/problématique que nous nous sommes 
 
 ## Inconvénient et limites :construction:
 
-La principale contrainte du projet et pas la moindre est la **contrainte temporelle**. En effet, il est judicieux d'ajouter de nombreuses fonctionnalités, cependand il faut pouvoir assurer la distribution du projet pour la date donnée.  
+La principale contrainte du projet et pas la moindre est la **contrainte temporelle**. En effet, il est judicieux d'ajouter de nombreuses fonctionnalités, cependant il faut pouvoir assurer la distribution du projet pour la date donnée.  
 Il y a également la **contrainte de groupe**, avancer en parallèle en respectant les différents rôles attribuée et compléter les tâches qui nous sont confiées.  
 Nous sommes également limité par les différents outils que nous utiliserons ainsi que les performances des machines à disposition, il s'agit de la **contrainte matériel et logiciel**.
 
