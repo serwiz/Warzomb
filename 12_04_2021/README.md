@@ -2,12 +2,12 @@
 
 # AWS : Warzomb :space_invader:
 
-*Semaine du 12/04/2021*
+*Semaine du 12/04/2021*  
 *Groupe 5 :*
 - *Moussa EL HABAR*
 - *Jeff LIM*
 - *Aymen CHIHANI*
-- *Wissam SERHAN*
+- *Wissam SERHAN*  
 *lien du dépôt github: [Warzomb](https://github.com/serwiz/Warzomb)*
 
 ## Introduction :door:
