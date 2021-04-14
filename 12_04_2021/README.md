@@ -3,6 +3,12 @@
 # AWS : Warzomb :space_invader:
 
 *Semaine du 12/04/2021*  
+*Groupe 5 :*
+- *Moussa EL HABAR*
+- *Jeff LIM*
+- *Aymen CHIHANI*
+- *Wissam SERHAN*  
+
 *lien du dépôt github: [Warzomb](https://github.com/serwiz/Warzomb)*
 
 ## Introduction :door:
@@ -41,7 +47,7 @@ Notre application devra intégrer les éléments suivants :
 
 Pour le projet, nous avons jugé plus pertinent d'utiliser un SGBD relationnel qui suit le modele [Entité-Association](https://fr.wikipedia.org/wiki/Mod%C3%A8le_entit%C3%A9-association) (EA). Le modéle EA permet la manipulation plus aisée des données pour ce type de base de données. Les données sont stockées dans différentes tables Pour le moment voici les différentes tables que comportera le SGBD :
 
-![BDD](https://github.com/serwiz/Warzomb/12_04_2021/schema_sgbd_1.png)
+![BDD](https://github.com/serwiz/Warzomb/blob/master/12_04_2021/schema_sgbd_1.png)
 
 ## Code :minidisc:
 
@@ -57,6 +63,8 @@ Pour le moment la priorité est à l'organisation et à la préparation des diff
 - Intégration de plusieurs fonctionnalités :
   - Le chat
   - Le multijoueurs
+
+À noter que le code est consultable sur le [dépot distant du projet](https://github.com/serwiz/Warzomb) github.
 
 ## Ressources :information_source:
 
@@ -154,6 +162,8 @@ Pour cette semaine, nous avons distribué les rôles comme suit :
   - Rédaction du diaporama synthétisant les données du rapport
   - Préparation d'un rapport au format pdf
   - Conception de base de données
+
+Pour les semaines qui suivent nous n'avons pas encore décidé de l'attribution des rôles.
 
 ## Bibliographie :blue_book:
 
