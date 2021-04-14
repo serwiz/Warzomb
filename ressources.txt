@@ -1,0 +1,91 @@
+https://ourcodeworld.com/articles/read/261/how-to-create-an-http-server-with-express-in-node-js
+https://modernweb.com/building-multiplayer-games-with-node-js-and-socket-io/
+
+- faire un formulaire avec nodejs
+https://medium.com/swlh/read-html-form-data-using-get-and-post-method-in-node-js-8d2c7880adbf
+
+- convertor from HTML to JS syntax
+https://www.accessify.com/tools-and-wizards/developer-tools/html-javascript-convertor/
+
+- Choisir son moteur de stockage
+https://www.techrepublic.com/article/a-fast-and-furious-guide-to-mysql-database-engines/
+
+- pour restreindre le choix des classes dans les tables
+ENUM mais si on doit ajouter des classes, la mise a jour peut etre contraignante
+-> on peut faire ça à la place
+https://stackoverflow.com/questions/6367063/how-to-restrict-a-column-value-in-sqlite-mysql
+
+Ressources utilisées:
+- Glitch,vs code pour coder
+- Tiled pour les dessins de map
+- Express pour gérer la partie serveur (au choix, peut etre modif plus tard)
+- Mysql Workbench pour la partie base de données
+- Socket.io pour la communication serveur/client
+- Sequelize pour coder la gestion des BDD
+
+
+-Assets pour les map
+https://kenney.nl/assets?q=2d
+
+
+//////////////////////////
+- yup pour créer des schéma de validations
+-DOMPurify
+https://linguinecode.com/post/validate-sanitize-user-input-javascript
+- un herbergeur d'images (amazon cloud par exemple)
+
+
+Pourquoi un serveur et un client ?
+Server
+The server should be in charge of making sure that moves are legal,
+calculating points, and anything else related to the rules and running of the game. 
+This is where the logic of the game is or where the game is played.
+
+Client
+This is ONLY used for interacting with the server. 
+There should exists a protocol between the Server and the Client. 
+The client will only send requests to the server, 
+wait for a response and update the UI appropriately. 
+No game logic should be implemented here.
+
+-KeyCode for moves 
+http://javascriptkeycode.com/
+
+-Dossier qui parle d'une optimisation pour gérer les collisions 
+https://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374
+
+-chat
+https://www.skysilk.com/blog/2018/create-real-time-chat-app-nodejs/
+
+-page d'inscription basique en javascript
+https://medium.com/swlh/how-to-create-your-first-login-page-with-html-css-and-javascript-602dd71144f1
+
+-prévention injection
+https://owasp.org/www-community/xss-filter-evasion-cheatsheet
+https://stackoverflow.com/questions/44488156/how-to-sanitize-js-and-html-in-inputs
+//////////////////////////////////////
+
+
+A faire :
+
+Chat:
+- option pour ne pas voir le chat (le désactiver)
+
+html :
+- page de menu de séléction de perso et de map
+- page de profil
+- page historique
+- footer a remplir
+- lié le site a une bdd 
+- check des documents sur internet pour voir comment gérer la sécu du site
+
+jeu :
+- ajouter des compétences avec leur icones
+- 4 map a modéliser encore sur Tiled
+- le jeu n'a qu'une classe de perso pour le moment
+- gérer les collisions 
+- ne pas sortir des limites de l'écran
+- objets
+- ennemis
+- objectifs
+- tableau de score

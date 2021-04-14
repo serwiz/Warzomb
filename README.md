@@ -1,9 +1,30 @@
- # Projet AWS : Warzomb ☠️
- 
- ## Introduction
+# hello-express
 
-Le but de ce projet est de réaliser une application web en HTML-CSS-JavaScript intégrant le front-end et le back-end. Pour cela il conviendra d'utiliser différents outils tels que : NodeJs, MongoDB, etc.
-    Nous avons décidé d'élaborer un mini-jeux de rôle en 2D, multijoueurs en ligne appelé WARZOMB. Le jeu est basé sur la survie d'un personnage au sein d'un environnement 2D avec ou contre les autres joueurs. Il faudra lutter contre des zombies de tout types : zombie, zombie-tireur, zombie-sorcier, Boss-zombie. De plus le but étant d'avoir le meilleur score qui sera basé sur le montant des piéces ramassée. Le jeu comportera plusieurs mode :      
-* "Survie" : Chrono en main, il faudra tenir le plus longtemps possible contre une horde de zombie en tout genre. De 1 à 4 joueurs.
-* "Battle - Mélée Génerale" : Tous contre tous zombie et joueurs, tous les coups sont permis le dernier en vie remporte.
-* "High Score" : En un temps limité, ramasser le plus de piéces pour marquer le plus de points.
+A server that serves a webpage, its resources, and some data
+
+
+## Your Project
+
+On the front-end,
+
+- Edit `views/index.html` to change the content of the webpage
+- `public/client.js` is the javacript that runs when you load the webpage
+- `public/style.css` is the styles for `views/index.html`
+- Drag in `assets`, like images or music, to add them to your project
+
+On the back-end,
+
+- your app starts at `server.js`
+- add frameworks and packages in `package.json`
+- safely store app secrets in `.env` (nobody can see this but you and people you invite)
+
+Click `Show` in the header to see your app live. Updates to your code will instantly deploy.
+
+
+## Made by [Glitch](https://glitch.com/)
+
+**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+
+Find out more [about Glitch](https://glitch.com/about).
+
+( ᵔ ᴥ ᵔ )
