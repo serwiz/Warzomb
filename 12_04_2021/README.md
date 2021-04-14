@@ -2,7 +2,12 @@
 
 # AWS : Warzomb :space_invader:
 
-*Semaine du 12/04/2021*  
+*Semaine du 12/04/2021*
+*Groupe 5 :*
+- *Moussa EL HABAR*
+- *Jeff LIM*
+- *Aymen CHIHANI*
+- *Wissam SERHAN*
 *lien du dépôt github: [Warzomb](https://github.com/serwiz/Warzomb)*
 
 ## Introduction :door:
@@ -57,6 +62,8 @@ Pour le moment la priorité est à l'organisation et à la préparation des diff
 - Intégration de plusieurs fonctionnalités :
   - Le chat
   - Le multijoueurs
+
+À noter que le code est consultable sur le [dépot distant du projet](https://github.com/serwiz/Warzomb) github.
 
 ## Ressources :information_source:
 
@@ -154,6 +161,8 @@ Pour cette semaine, nous avons distribué les rôles comme suit :
   - Rédaction du diaporama synthétisant les données du rapport
   - Préparation d'un rapport au format pdf
   - Conception de base de données
+
+Pour les semaines qui suivent nous n'avons pas encore décidé de l'attribution des rôles.
 
 ## Bibliographie :blue_book:
 
