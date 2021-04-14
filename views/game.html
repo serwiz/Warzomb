@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Page principale</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  </head>
+  <body>
+    <!--#include virtual="views/header.html" -->
+    <script type="text/javascript" src="header.js"></script>
+
+    <!-- html elements -->
+
+    <!-- game part -->
+    <div class="canvas-container">
+      <canvas id="game_zone" width="500" height="500"></canvas>
+    </div>
+
+    <!-- chat part-->
+    <div class="box">
+      <div>Chat</div>
+      <div class="chatBox" id="chat-text"></div>
+      <form id="chat-form">
+        <input
+          id="chat-input"
+          type="text"
+          style="width:30%;height:30px;"
+          autocomplete="off"
+        />
+        <input class="btn" type="submit" value="Send" />
+      </form>
+    </div>
+    <!--#include virtual="views/footer.html" -->
+    <script type="text/javascript" src="footer.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="init.js"></script>
+    <script>
+      var typing = false;
+      var socket = io();
+      //////////////////////////////////////////////////////////////
+      /** charging sprites */
+      var map = new Image();
+      map.src = "/tileset/images/map1";
+      var character = new Image();
+      character.src = "/tileset/images/character";
+
+      //////////////////////////////////////////////////////////////
+      /** game */
+      var game = document.getElementById("game_zone").getContext("2d");
+      game.font = "30px Arial";
+
+      /**
+       * draw the map on the Canvas
+       */
+      function drawMap() {
+        game.drawImage(map, 0, 0);
+      }
+
+      /**
+       * draw the players and the projectiles
+       * @param {list} players - list of players
+       * @param {list} players - list of projectiles
+       */
+      function drawObjects(players, projectiles) {
+        // players
+        for (var i in players) {
+          // hpBar
+          var hpBar = (30 * players[i].life) / players[i].maxLife;
+          game.fillStyle = "red";
+          game.fillRect(players[i].x - hpBar / 2, players[i].y - 40, hpBar, 4);
+
+          // player sprite
+          var width = character.width * 2;
+          var height = character.height * 2;
+          game.drawImage(
+            character,
+            0,
+            0,
+            character.width,
+            character.height,
+            players[i].x - width / 2,
+            players[i].y - height / 2,
+            width,
+            height
+          );
+        }
+
+        // projectiles
+        for (var i in projectiles)
+          game.fillRect(projectiles[i].x - 5, projectiles[i].y - 5, 10, 10);
+      }
+
+      /**
+       * draw the HuD, for the moment only the score is displayed
+       */
+      function drawHud() {
+        game.fillStyle = "white";
+        game.fillText(clientPlayer.list[playerId].score, 0, 30);
+      }
+
+      //////////////////////////////////////////////////
+      /** chat */
+      var chatText = document.getElementById("chat-text");
+      var chatInput = document.getElementById("chat-input");
+      var chatForm = document.getElementById("chat-form");
+
+      /**
+       * When receiving the call, print the message
+       * @param {String} data - message to print
+       */
+      socket.on("printMessage", function(data) {
+        console.log("got a chat message");
+        chatText.innerHTML += '<div class="chatCell">' + data + "</div>";
+        chatText.scrollTop = chatText.scrollHeight;
+      });
+
+      /**
+       * When sending a message, emit a call to the server
+       * @param {event} e - submit event
+       */
+      chatForm.onsubmit = function(e) {
+        //prevent the form from refreshing the page
+        e.preventDefault();
+
+        //ask to send the message to all the players
+        socket.emit("sendMessage", chatInput.value);
+        chatInput.value = "";
+      };
+
+      ///////////////////////////////////////////////////
+
+      /**
+       * When receiving the call, initialize the objects
+       * @param {list} data - list of players and projectiles to create on the client side
+       */
+      socket.on("init", function(data) {
+        if (data.Id) playerId = data.Id;
+        for (var i = 0; i < data.player.length; i++) {
+           clientPlayer(data.player[i]);
+        }
+        for (var i = 0; i < data.projectile.length; i++) {
+          clientProjectile(data.projectile[i]);
+        }
+      });
+
+      /**
+       * When receiving the call, update info
+       *  @param {list} data - list of players and projectiles to create on the client side
+       */
+      socket.on("update", function(data) {
+        for (var i = 0; i < data.player.length; i++) {
+          var player = clientPlayer.list[data.player[i].id];
+          if (player) {
+            if (data.player[i].x !== undefined) player.x = data.player[i].x;
+            if (data.player[i].y !== undefined) player.y = data.player[i].y;
+            if (data.player[i].hp !== undefined)
+              player.life = data.player[i].hp;
+            if (data.player[i].score !== undefined)
+              player.score = data.player[i].score;
+          }
+        }
+        for (var i = 0; i < data.projectile.length; i++) {
+          var p = clientProjectile.list[data.projectile[i].id];
+          if (p) {
+            if (data.projectile[i].x !== undefined) p.x = data.projectile[i].x;
+            if (data.projectile[i].y !== undefined) p.y = data.projectile[i].y;
+          }
+        }
+      });
+
+      /**
+       * When receiving the call, delete info
+       *  @param {list} data - list of players and projectiles to create on the client side
+       */
+      socket.on("delete", function(data) {
+        for (var i = 0; i < data.player.length; i++) {
+          delete clientPlayer.list[data.player[i]];
+        }
+        for (var i = 0; i < data.projectile.length; i++) {
+          delete clientProjectile.list[data.projectile[i]];
+        }
+      });
+
+      //////////////////////////////////////////////////////////
+      /**
+       * Update the display
+       */
+      setInterval(function() {
+        if (!playerId) return;
+        // map
+        game.clearRect(0, 0, 500, 500);
+        drawMap();
+        drawHud();
+        drawObjects(clientPlayer.list, clientProjectile.list);
+      }, 40);
+
+      ////////////////////////////////////////////////////////
+      /** events handler */
+
+      /**
+       * When receiving the call, do one of the actions according to the event's value
+       *  @param {event} event - key pressed event
+       */
+      document.onkeydown = function(event) {
+        if (typing) {
+          event.prevenDefault();
+          return false;
+        }
+        if (event.keyCode === 68)
+          //d
+          socket.emit("keyPress", { inputId: "right", state: true });
+        else if (event.keyCode === 83)
+          //s
+          socket.emit("keyPress", { inputId: "down", state: true });
+        else if (event.keyCode === 81)
+          //q
+          socket.emit("keyPress", { inputId: "left", state: true });
+        else if (event.keyCode === 90)
+          // z
+          socket.emit("keyPress", { inputId: "up", state: true });
+        else if (event.keyCode === 88)
+          // x
+          socket.emit("keyPress", { inputId: "attack", state: true });
+      };
+
+      /**
+       * When receiving the call, do one of the actions according to the event's value
+       *  @param {event} event - key released event
+       */
+      document.onkeyup = function(event) {
+        if (event.keyCode === 68)
+          //d
+          socket.emit("keyPress", { inputId: "right", state: false });
+        else if (event.keyCode === 83)
+          //s
+          socket.emit("keyPress", { inputId: "down", state: false });
+        else if (event.keyCode === 81)
+          //q
+          socket.emit("keyPress", { inputId: "left", state: false });
+        else if (event.keyCode === 90)
+          // z
+          socket.emit("keyPress", { inputId: "up", state: false });
+        else if (event.keyCode === 88)
+          // x
+          socket.emit("keyPress", { inputId: "attack", state: false });
+
+        //user pressed and released enter key
+        if (event.keyCode === 13) {
+          if (!typing) {
+            //user is not already typing, focus our chat text form
+            chatInput.focus();
+          } else {
+            //user sent a message, unfocus our chat form
+            chatInput.blur();
+          }
+        }
+      };
+
+      /**
+       * Change the state of the user : either the user is writing on the chat or the user is playing
+       */
+      document.addEventListener("DOMContentLoaded", function() {
+        document
+          .getElementById("chat-input")
+          .addEventListener("focus", function() {
+            typing = true;
+          });
+        document
+          .getElementById("chat-input")
+          .addEventListener("blur", function() {
+            typing = false;
+          });
+      });
+    </script>
+  </body>
+</html>
