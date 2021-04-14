@@ -41,7 +41,7 @@ Notre application devra intégrer les éléments suivants :
 
 Pour le projet, nous avons jugé plus pertinent d'utiliser un SGBD relationnel qui suit le modele [Entité-Association](https://fr.wikipedia.org/wiki/Mod%C3%A8le_entit%C3%A9-association) (EA). Le modéle EA permet la manipulation plus aisée des données pour ce type de base de données. Les données sont stockées dans différentes tables Pour le moment voici les différentes tables que comportera le SGBD :
 
-![BDD](https://github.com/serwiz/Warzomb/12_04_2021/schema_sgbd_1.png)
+![BDD](https://github.com/serwiz/Warzomb/blob/master/12_04_2021/schema_sgbd_1.png)
 
 ## Code :minidisc:
 
