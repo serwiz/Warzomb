@@ -72,8 +72,6 @@ Chat:
 - option pour ne pas voir le chat (le désactiver)
 
 html :
-- page de menu de séléction de perso et de map
-- page de profil
 - page historique
 - footer a remplir
 - lié le site a une bdd 
@@ -84,8 +82,48 @@ jeu :
 - 4 map a modéliser encore sur Tiled
 - le jeu n'a qu'une classe de perso pour le moment
 - gérer les collisions 
-- ne pas sortir des limites de l'écran
 - objets
-- ennemis
 - objectifs
 - tableau de score
+
+
+
+////////////////////////////////////
+Semaine 2
+nouvelles ressources :
+
+- Firebase tuto pour créer un systeme de connexion
+https://www.youtube.com/watch?v=-OKrloDzGpU&t=328s
+https://firebase.google.com/
+
+- firebase 
+faire une page de connexion avec mail et config prédéfinie cote client
+https://firebase.google.com/docs/auth/web/firebaseui
+
+- aide pour afficher des valeurs dynamiquement dans un tableau HTML (non utilisé pour le moment)
+https://developer.mozilla.org/fr/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces
+
+- sprites personnages
+https://craftpix.net/freebies/filter/sprites/page/2/
+
+fait :
+- systeme de connexion avec Firebase Auth (cote client)
+- ajout de kill et death dans la barre de score
+- le pseudo du joueur apparait maintenant, s'il n'est pas inscrit -> anonymous
+- page de profil : utilisation de https://bootsnipp.com/snippets/nPvnk et modifications apportées pour etre adpater a notre type de site
+    -> le code ci-dessus utilise Jquery DCN :
+    - https://jquery.com/
+    - https://www.yogihosting.com/jquery-cdn/ qu'est ce que jquery CDN
+    -https://www.yogihosting.com/what-is-cdn-content-delivery-network/ qu'est ce qu'un CDN
+- le personnage et les projectiles ne peuvent plus sortir de la map
+- premiers ennemis, apparition aléatoire sur la carte selon un intervalle. L'ennemi se déplace vers le joueur le plus proche. Limite de 3
+- initialisation du admin SDK côté serveur pour gérer les mise a jour des utilisateurs et bdd (non utilisé pour le moment)
+  - https://firebase.google.com/docs/admin/setup
+- 1 map modélisée via Tiled (disponible dans les dossiers mais non ajouté puisque l'option choix de map n'est pas encore présent)
+- 1ere version de validation d'input pour le chat en utilisant Yup
+https://www.npmjs.com/package/yup#mixedvalidatevalue-any-options-object-promiseany-validationerror
+http://www.regular-expressions.info/lookaround.html pour le Regex
+  -> une amélioration possible serait de créer une liste des balises plutot que de bannir toutes les chaines de la forme *<*>*
+- 3 canvas au lieu d'un, les 2 autres serviront pour l'hud 
+  -> on pourrait les superposer mais il faut alors supprimer header et footer
+- 1ere Page de menu de selection, la page est lié au serveur mais pas au jeu (on peut la tester et s'assurait que les info sont envoyés aux serveur)

@@ -5,6 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css"
+    />
   </head>
   <body>
     <!--#include virtual="views/header.html" -->
@@ -25,27 +39,15 @@
         <div class="fakeimg" style="height:60px;">Image</div>
       </div>
       <div class="main">
-        <form id="login">
-          <input
-            type="text"
-            name="username"
-            id="username-field"
-            class="login-form-field"
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            name="password"
-            id="password"
-            class="login-form-field"
-            placeholder="Password"
-          />
-          <input type="submit" value="Login" id="login-form-submit" />
-        </form>
+        <div id="firebaseui-auth-container"></div>
+        <div id="loader">Loading...</div>
       </div>
     </div>
 
     <!--#include virtual="views/footer.html" -->
+    <script src="fireBase.js"></script>
+    <script src="login.js"></script>
+    <script src="index.js"></script>
     <script type="text/javascript" src="footer.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </body>

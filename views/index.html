@@ -5,6 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
   </head>
   <body>
     <!--#include virtual="views/header.html" -->
@@ -48,7 +57,11 @@
       </div>
     </div>
 
+    <!-- Javascript files -->
+
     <!--#include virtual="views/footer.html" -->
+    <script src="fireBase.js"></script>
+    <script src="index.js"></script>
     <script type="text/javascript" src="footer.js"></script>
   </body>
 </html>
