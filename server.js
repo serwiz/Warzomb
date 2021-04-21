@@ -13,6 +13,20 @@ app.use(express.static("public"));
 app.use(express.static("views"));
 app.use("/tileset/images", express.static(__dirname + "/tileset/images"));
 ////////////////////////////////////////////////
+
+/* base de donnees */
+////////////////////////////////////////////////
+var admin = require("firebase-admin");
+const { config } = require("process");
+var serviceAccount = require("./serviceAccountKey.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://jeuwarzomb-default-rtdb.firebaseio.com"
+});
+
+
+
+
 /** Post form for configure the game */
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,15 +68,6 @@ app.post("/selection", function(req, res) {
 const yup = require("yup");
 
 ////////////////////////////////////////////////
-/** admin Firbase */
-var admin = require("firebase-admin");
-
-var serviceAccount = require("./serviceAccountKey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
 ////////////////////////////////////////////////
 // Global variables
 var SOCKET_LIST = [];
@@ -342,12 +347,15 @@ class Ennemy extends Element {
     var playerIndex = 0;
 
     // checking if there is at least 1 player in the list
-    if (Object.keys(Player.list).length) {
+    if (Object.keys(Player.list).length)
+    {
       // looking for the closest player
-      for (var i in Player.list) {
+      for (var i in Player.list)
+      {
         var player = Player.list[i];
         tmpDistance = this.evaluateDistance(player);
-        if (tmpDistance < closest) {
+        if (tmpDistance < closest)
+        {
           closest = tmpDistance;
           playerIndex = i;
         }
@@ -384,7 +392,8 @@ class Ennemy extends Element {
 /**
  * Create an ennemy with random parameters
  */
-function randomGenerateEnnemy() {
+function randomGenerateEnnemy()
+{
   var x = Math.random() * 512;
   var y = Math.random() * 512;
   var id = Math.random();
@@ -571,6 +580,65 @@ Projectile.infoProjectiles = function() {
 /** communication */
 const io = require("socket.io")(server);
 
+////////////////////
+
+/* insertion of the game in the database */
+let partie = function writeUserData(id_partie, datedeb, datefin, joueur_id, score) {
+  //console.log("----------------------------------------")
+  //console.log("insertion de la partie : " +"\n  Id Partie :" +id_partie + 
+  //"\n  debut : " +datedeb + "\n  fin :  " + datefin + "\n  id_J :" +joueur_id + "\n  score:  " + score )
+  //console.log("----------------------------------------")
+  admin.database().ref('parties/' + Math.floor(Math.random() * 50)).set
+    ({
+      id_partie: id_partie,
+      datedeb: datedeb,
+      datefin: datefin,
+      joueur_id: joueur_id,
+      score: score,
+    });
+}
+
+/* creation of the IMAGE table using the config file */
+let image = function writeDataImage() {
+  var config = require("./config.json");
+  admin.database().ref('image_url/').set(config);
+}
+
+image(); 
+/*
+Test
+dbRef.child("parties").get().then((snapshot) =>
+{
+  if (snapshot.exists())
+  {
+    console.log("recuperation de la data ! ")
+  } 
+  else
+  {
+    console.log(" aucune donnees ! ");
+  }
+}).catch((error) => { console.error(error);});
+
+*/
+
+
+ /* retrieve all the players' game parts */ 
+let Historique = function (id_j= 0) {
+  var data;
+  admin.database().ref().child("parties").child(id_j).get().then((snapshot) => {
+    if (snapshot.exists()) {
+      data = snapshot.toJSON();
+      return data; 
+    }
+    else {
+      console.log(" aucune donnees ! ");
+      data = null;
+    }
+
+  }).catch((error) => { console.error(error); });
+}
+
+
 /**
  * on connection, create a socket and set everything for the player.
  * @param {socket} socket - object representing the link between client and server
@@ -579,6 +647,38 @@ io.sockets.on("connection", function(socket) {
   console.log("server connected");
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
+
+
+  /*insertion of the game in the database */
+  var cpt = 0;
+  socket.on("FinP", function (data) {
+
+    if (cpt < 5) {
+      console.log("FIN Partie :");
+      partie(data["id_partie"], data["datedeb"], new Date().toISOString(), data["joueur id"], data["score"]);
+    }
+    cpt += 1;
+  });
+
+  /* retrieve all  game parts */
+  socket.on("get_history", function (data) {
+    console.log("historique");
+
+    admin.database().ref().child("parties").get().then((snapshot) => {
+      if (snapshot.exists()) {
+        var data = snapshot.toJSON();
+        socket.emit("rep_geth", data);
+
+        return data;
+      }
+      else {
+        console.log(" aucune donnees ! ");
+        data = null;
+      }
+
+    }).catch((error) => { console.error(error); });
+
+  });
 
   Player.onConnect(socket);
 
@@ -613,6 +713,7 @@ io.sockets.on("connection", function(socket) {
         SOCKET_LIST[i].emit("printMessage", value.message);
       }
     });
+
 
     schema.validate(test).catch(function(err) {
       const errorMessage =

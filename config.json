@@ -1,0 +1,45 @@
+{
+    "Personnages" :
+    {
+
+                "Sorcier":
+                    {
+                    "nom": "mage",
+                    "url": "http://www.google.fr"
+                    },
+
+                "Tank":
+                    {
+                        "nom": "sdqdqsdqd",
+                        "url": "lien"
+                    },
+                    
+                "Epeiste":
+                    {
+                        "nom": "dsqdqsdq",
+                        "url": "lien"
+                    },
+
+                "Tireur":
+                    {
+                        "nom": "sddqsdqd",
+                        "url": "lien"
+                    }
+    },
+        
+    "Zombies":
+    {
+
+                "1":{
+                     "nom":"dsqdqsdq",
+                     "lien": "lein"
+                    },
+                "2":
+                {
+                    "nom": "dsqdqsdq",
+                    "lien": "lein"
+                }
+
+    }
+
+}

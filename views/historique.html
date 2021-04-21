@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <title></title>
+    <script type="text/javascript" src="header.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <!-- https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    
+    <!-- Javascript files -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="init.js"></script>
+    <script src="fireBase.js"></script>
+    <script>
+        /** allow us to check if a user is still connected */
+        var firebase = app_fireBase;
+        var name = null;
+        var user = firebase.auth().currentUser;
+        firebase.auth().onAuthStateChanged(function (user)
+        {
+            if (user) {
+                name = user.displayName;
+            } else {
+                name = "anonymous";
+                console.log("no user detected");
+            }
+        });
+    </script>
+
+</head>
+<body>
+    <div id = "res"></div>
+    
+</body>
+<script type="text/javascript" src="footer.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src ="historique.js"> </script>
+</html>

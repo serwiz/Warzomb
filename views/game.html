@@ -19,11 +19,10 @@
 
     <!-- Javascript files -->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="fireBase.js"></script>
-    <script src="index.js"></script>
+ 
+   
     <script src="init.js"></script>
     <script src="fireBase.js"></script>
-    <script src="index.js"></script>
     <script>
       /** allow us to check if a user is still connected */
       var firebase = app_fireBase;
@@ -198,6 +197,7 @@
        * When receiving the call, print the message
        * @param {String} data - message to print
        */
+
       socket.on("printMessage", function(data) {
         console.log("got a chat message");
         chatText.innerHTML += '<div class="chatCell">' + data + "</div>";
@@ -293,12 +293,14 @@
       /**
        * Update the display
        */
-      setInterval(function() {
+      setInterval(function()
+      {
         if (!playerId) return;
         // map
         game.clearRect(0, 0, 512, 512);
         game.drawImage(map, 0, 0);
-        if (clientPlayer.list[playerId].score !== lastScore || clientPlayer.list[playerId].frag !== lastFrag ||clientPlayer.list[playerId].death !== lastDeath || clientPlayer.list[playerId].life !== lastLife) {
+        if (clientPlayer.list[playerId].score !== lastScore || clientPlayer.list[playerId].frag !== lastFrag ||clientPlayer.list[playerId].death !== lastDeath || clientPlayer.list[playerId].life !== lastLife)
+        {
           left_game.clearRect(0, 0, 300, 500);
           right_game.clearRect(0, 0, 300, 500);
           lastScore = clientPlayer.list[playerId].score;
@@ -306,7 +308,7 @@
           lastDeath = clientPlayer.list[playerId].death;
           lastLife = clientPlayer.list[playerId].life;
           drawHud();
-          drawName();
+          //drawName();
         }
         drawObjects(
           clientPlayer.list,
@@ -392,6 +394,21 @@
             typing = false;
           });
       });
+
+      /*
+      end of game simulation
+       */
+        setInterval(() => {
+           socket.emit("FinP",
+            { "id_partie" : (Math.floor(Math.random() * 50)).toString() ,
+               "datedeb" : new Date() ,
+               "joueur id": playerId,
+                "score":  (Math.floor(Math.random() * 50)).toString() + "/" + (Math.floor(Math.random() * 50)).toString()
+            });
+
+        },30000);
+       
+
     </script>
   </body>
 </html>
