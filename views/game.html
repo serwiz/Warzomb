@@ -5,16 +5,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
   </head>
   <body>
-    <!--#include virtual="views/header.html" -->
-    <script type="text/javascript" src="header.js"></script>
+
+
+    <!-- Javascript files -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="fireBase.js"></script>
+    <script src="index.js"></script>
+    <script src="init.js"></script>
+    <script src="fireBase.js"></script>
+    <script src="index.js"></script>
+    <script>
+      /** allow us to check if a user is still connected */
+      var firebase = app_fireBase;
+      var name = null;
+      var user = firebase.auth().currentUser;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          name = user.displayName;
+        } else {
+          name = "anonymous";
+          console.log("no user detected");
+        }
+        drawName();
+      });
+    </script>
 
     <!-- html elements -->
 
     <!-- game part -->
-    <div class="canvas-container">
-      <canvas id="game_zone" width="500" height="500"></canvas>
+    <div class="side_game"></div>
+    <div class="main">
+      <div class="canvas-container">
+        <canvas id="game_zone-ui-left" width="300" height="512"></canvas>
+        <canvas id="game_zone" width="512" height="512"></canvas>
+        <canvas id="game_zone-ui-right" width="300" height="512"></canvas>
+      </div>
     </div>
 
     <!-- chat part-->
@@ -31,38 +66,40 @@
         <input class="btn" type="submit" value="Send" />
       </form>
     </div>
-    <!--#include virtual="views/footer.html" -->
-    <script type="text/javascript" src="footer.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="init.js"></script>
     <script>
       var typing = false;
       var socket = io();
       //////////////////////////////////////////////////////////////
       /** charging sprites */
-      var map = new Image();
-      map.src = "/tileset/images/map1";
+      /** will be replace by bdd loads */
       var character = new Image();
       character.src = "/tileset/images/character";
+      var ennemy = new Image();
+      ennemy.src = "tileset/images/ennemy";
+      var fireball = new Image();
+      fireball.src = "tileset/images/fireball";
+      var map = new Image();
+      map.src = "/tileset/images/map1";
 
       //////////////////////////////////////////////////////////////
       /** game */
       var game = document.getElementById("game_zone").getContext("2d");
+      var left_game = document
+        .getElementById("game_zone-ui-left")
+        .getContext("2d");
       game.font = "30px Arial";
-
-      /**
-       * draw the map on the Canvas
-       */
-      function drawMap() {
-        game.drawImage(map, 0, 0);
-      }
+      left_game.font = "20px Arial";
+       var right_game = document
+        .getElementById("game_zone-ui-right")
+        .getContext("2d");
+      right_game.font = "20px Arial";
 
       /**
        * draw the players and the projectiles
        * @param {list} players - list of players
        * @param {list} players - list of projectiles
        */
-      function drawObjects(players, projectiles) {
+      function drawObjects(players, projectiles, ennemies) {
         // players
         for (var i in players) {
           // hpBar
@@ -88,15 +125,67 @@
 
         // projectiles
         for (var i in projectiles)
-          game.fillRect(projectiles[i].x - 5, projectiles[i].y - 5, 10, 10);
+          game.drawImage(
+            fireball,
+            0,
+            0,
+            fireball.width,
+            fireball.height,
+            projectiles[i].x - 5,
+            projectiles[i].y - 5,
+            width - 10,
+            height - 10
+          );
+
+        // ennemies
+        for (var i in ennemies) {
+          var hpBar = (30 * ennemies[i].life) / ennemies[i].maxLife;
+          game.fillRect(
+            ennemies[i].x - hpBar / 8,
+            ennemies[i].y - 20,
+            hpBar,
+            4
+          );
+          game.drawImage(
+            ennemy,
+            0,
+            0,
+            ennemy.width,
+            ennemy.height,
+            ennemies[i].x - width / 2,
+            ennemies[i].y - height / 2,
+            width * 2,
+            height * 2
+          );
+        }
       }
 
       /**
        * draw the HuD, for the moment only the score is displayed
        */
       function drawHud() {
-        game.fillStyle = "white";
-        game.fillText(clientPlayer.list[playerId].score, 0, 30);
+        left_game.fillStyle = "black";
+        left_game.fillText(
+          clientPlayer.list[playerId].frag +
+            "/" +
+            clientPlayer.list[playerId].death +
+            "/" +
+            clientPlayer.list[playerId].score,
+          0,
+          40
+        );
+        
+        right_game.fillStyle = "black";
+        right_game.fillText("HP: " +
+          clientPlayer.list[playerId].life + "/" + clientPlayer.list[playerId].maxLife,
+          0,
+          20
+        );
+      }
+
+      function drawName() {
+        left_game.fillStyle = "black";
+        left_game.fillText(name, 0, 20);
       }
 
       //////////////////////////////////////////////////
@@ -122,7 +211,6 @@
       chatForm.onsubmit = function(e) {
         //prevent the form from refreshing the page
         e.preventDefault();
-
         //ask to send the message to all the players
         socket.emit("sendMessage", chatInput.value);
         chatInput.value = "";
@@ -136,11 +224,15 @@
        */
       socket.on("init", function(data) {
         if (data.Id) playerId = data.Id;
+
         for (var i = 0; i < data.player.length; i++) {
-           clientPlayer(data.player[i]);
+          clientPlayer(data.player[i]);
         }
         for (var i = 0; i < data.projectile.length; i++) {
           clientProjectile(data.projectile[i]);
+        }
+        for (var i = 0; i < data.ennemy.length; i++) {
+          clientEnnemy(data.ennemy[i]);
         }
       });
 
@@ -158,6 +250,10 @@
               player.life = data.player[i].hp;
             if (data.player[i].score !== undefined)
               player.score = data.player[i].score;
+            if (data.player[i].death !== undefined)
+              player.death = data.player[i].death;
+            if (data.player[i].frag !== undefined)
+              player.frag = data.player[i].frag;
           }
         }
         for (var i = 0; i < data.projectile.length; i++) {
@@ -165,6 +261,14 @@
           if (p) {
             if (data.projectile[i].x !== undefined) p.x = data.projectile[i].x;
             if (data.projectile[i].y !== undefined) p.y = data.projectile[i].y;
+          }
+        }
+        for (var i = 0; i < data.ennemy.length; i++) {
+          var e = clientEnnemy.list[data.ennemy[i].id];
+          if (e) {
+            if (data.ennemy[i].x !== undefined) e.x = data.ennemy[i].x;
+            if (data.ennemy[i].y !== undefined) e.y = data.ennemy[i].y;
+            if (data.ennemy[i].hp !== undefined) e.life = data.ennemy[i].hp;
           }
         }
       });
@@ -180,6 +284,9 @@
         for (var i = 0; i < data.projectile.length; i++) {
           delete clientProjectile.list[data.projectile[i]];
         }
+        for (var i = 0; i < data.ennemy.length; i++) {
+          delete clientEnnemy.list[data.ennemy[i]];
+        }
       });
 
       //////////////////////////////////////////////////////////
@@ -189,11 +296,24 @@
       setInterval(function() {
         if (!playerId) return;
         // map
-        game.clearRect(0, 0, 500, 500);
-        drawMap();
-        drawHud();
-        drawObjects(clientPlayer.list, clientProjectile.list);
-      }, 40);
+        game.clearRect(0, 0, 512, 512);
+        game.drawImage(map, 0, 0);
+        if (clientPlayer.list[playerId].score !== lastScore || clientPlayer.list[playerId].frag !== lastFrag ||clientPlayer.list[playerId].death !== lastDeath || clientPlayer.list[playerId].life !== lastLife) {
+          left_game.clearRect(0, 0, 300, 500);
+          right_game.clearRect(0, 0, 300, 500);
+          lastScore = clientPlayer.list[playerId].score;
+          lastFrag = clientPlayer.list[playerId].frag;
+          lastDeath = clientPlayer.list[playerId].death;
+          lastLife = clientPlayer.list[playerId].life;
+          drawHud();
+          drawName();
+        }
+        drawObjects(
+          clientPlayer.list,
+          clientProjectile.list,
+          clientEnnemy.list
+        );
+      }, 1000 / 60); // 1000ms = 1s
 
       ////////////////////////////////////////////////////////
       /** events handler */

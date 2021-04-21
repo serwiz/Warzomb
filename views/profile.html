@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Page de profil</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+    <!--#include virtual="views/header.html" -->
+    <script type="text/javascript" src="header.js"></script>
+
+    <!-- Javascript files -->
+    <script src="fireBase.js"></script>
+    <script src="index.js"></script>
+    <script>
+      /** allow us to check if a user is still connected */
+      var firebase = app_fireBase;
+      var user = firebase.auth().currentUser;
+      var name;
+      var email;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          name = user.displayName;
+          email = user.email;
+          var nameTag = document.getElementById("name");
+          var mailTag = document.getElementById("email");
+          nameTag.innerHTML += name;
+          mailTag.innerHTML += email;
+        } else {
+          console.log("no user detected");
+        }
+      });
+    </script>
+
+    <div class="row">
+      <div class="side">
+        <h2>Actu</h2>
+        <p>Derniers exploits du serveur :</p>
+        <p>
+          du blabla
+        </p>
+        <h3>Top Player</h3>
+        <p>Ces joueurs ont tout donné:</p>
+        <div class="fakeimg" style="height:60px;">Image</div>
+        <br />
+        <div class="fakeimg" style="height:60px;">Image</div>
+        <br />
+        <div class="fakeimg" style="height:60px;">Image</div>
+      </div>
+      <div class="main">
+        <div class="container">
+          <div class="col-md-7 ">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="box box-info">
+                  <div class="box-body">
+                    <div class="col-sm-6">
+                      <div align="center">
+                        <img
+                          alt="User Pic"
+                          src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                          id="profile-image1"
+                        />
+
+                        <input
+                          id="profile-image-upload"
+                          class="hidden"
+                          type="file"
+                        />
+                        <div style="color:#999;">
+                          click here to change profile image
+                        </div>
+                        <!--Upload Image Js And Css-->
+                      </div>
+
+                      <br />
+
+                      <!-- /input-group -->
+                    </div>
+                    <div class="col-sm-6">
+                      <span><p>Aspirant</p></span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr style="margin:5px 0 5px 0;" />
+
+                    <div class="col-sm-5 col-xs-6 tital ">Name:</div>
+
+                    <div class="col-sm-7 col-xs-6" id="name"></div>
+
+                    <div class="clearfix"></div>
+                    <div class="bot-border"></div>
+
+                    <div class="col-sm-5 col-xs-6 tital ">
+                      Date Of Joining:
+                    </div>
+                    <div class="col-sm-7">15 Jun 2016</div>
+
+                    <div class="clearfix"></div>
+                    <div class="bot-border"></div>
+
+                    <div class="col-sm-5 col-xs-6 tital ">Email:</div>
+
+                    <div class="col-sm-7" id="email"></div>
+
+                    <div class="clearfix"></div>
+                    <div class="bot-border"></div>
+
+                    <!-- /.box-body -->
+                  </div>
+                  <!-- /.box -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        $(function() {
+          $("#profile-image1").on("click", function() {
+            $("#profile-image-upload").click();
+          });
+        });
+      </script>
+    </div>
+
+    <!--#include virtual="views/footer.html" -->
+    <script type="text/javascript" src="footer.js"></script>
+  </body>
+</html>

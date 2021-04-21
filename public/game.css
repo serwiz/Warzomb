@@ -1,0 +1,61 @@
+/** https://codepen.io/francescostella/pen/oxwYzx */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  font-family: sans-serif;
+  line-height: 1.4;
+}
+
+.map_selection, .class_selection, .mode_selection, .validation{
+   text-align:center;
+}
+
+button  {
+  display: inline-block;
+  box-shadow: 1px 1px grey;
+  border-radius: 3px;
+  background-color: #A9A9A9;
+  padding: 5px;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+
+/** https://stackoverflow.com/questions/49243460/how-to-check-if-a-input-type-button-is-checked */
+
+/* Hide the checkboxes */
+input[type="radio"] {
+  display: none;
+} 
+/* Default styling for labels to make them look like buttons */
+input[type="radio"] + label {
+ 
+  display: inline-block;
+  box-shadow: 1px 1px grey;
+  border-radius: 3px;
+  background-color: #A9A9A9;
+  padding: 5px;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+/* Styling for labels when corresponding checkbox is checked */
+input[type="radio"]:checked + label {
+  box-shadow: -1px -1px grey;
+  background-color: #808080;
+}
+
+p {
+  text-align: center;
+}
+

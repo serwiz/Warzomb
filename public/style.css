@@ -40,10 +40,15 @@ body {
 }
 
 /* Right-aligned link */
-.navbar a.right {
+.navbar a.right_co {
   float: right;
+  display: block;
 }
 
+.navbar a.right_deco {
+  float: right;
+  display: none;
+}
 /* Change color on hover */
 .navbar a:hover {
   background-color: #ddd;
@@ -63,6 +68,13 @@ body {
 .side {
   -ms-flex: 30%; /* IE10 */
   flex: 30%;
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+.side_game {
+  -ms-flex: 10%; /* IE10 */
+  flex: 10%;
   background-color: #f1f1f1;
   padding: 20px;
 }
@@ -105,12 +117,13 @@ body {
 }
 
 /* game */
-#game_zone {
-  border:1px solid #000000;
+#game_zone, #game_zone-ui-left, #game_zone-ui-right{
+  border: 1px solid #000000;
+
 }
 
 .canvas-container {
-    text-align:center; 
+  text-align: center;
 }
 
 /* chat */
@@ -155,38 +168,24 @@ body {
   background: #2CC06B;
 }
 
-
-/* login */
-/** https://medium.com/swlh/how-to-create-your-first-login-page-with-html-css-and-javascript-602dd71144f1 */
-#login {
-  align-self: flex-start;
-  display: grid;
-  justify-items: center;
-  align-items: center;
-  margin-top: 250px;
+/** profile page */
+input.hidden {
+  position: absolute;
+  left: -9999px;
 }
 
-.login-form-field::placeholder {
-  color: #3a3a3a;
-}
-
-.login-form-field {
-  border: none;
-  border-bottom: 1px solid #3a3a3a;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  outline: none;
-  padding: 0px 0px 5px 5px;
-}
-
-#login-form-submit {
-  width: 10%;
-  padding: 7px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  background-color: #3a3a3a;
+#profile-image1 {
   cursor: pointer;
-  outline: none;
+
+  width: 100px;
+  height: 100px;
+  border: 2px solid #03b1ce;
+}
+.tital {
+  font-size: 16px;
+  font-weight: 500;
+}
+.bot-border {
+  border-bottom: 1px #f8f8f8 solid;
+  margin: 5px 0 5px 0;
 }

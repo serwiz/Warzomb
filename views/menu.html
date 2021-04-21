@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Page principale</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="game.css" media="screen" />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+  </head>
+  <body>
+    <form action="/selection" method="POST">
+      <section class="map_selection">
+        <p>
+          Choose a map:
+        </p>
+        <input type="radio" id="map1" name="map" value="forest" />
+        <label for="map1">Forest</label>
+
+        <input type="radio" id="map2" name="map" value="mountain" />
+        <label for="map2">Mountain</label>
+
+        <input type="radio" id="map3" name="map" value="?" />
+        <label for="map3">Map3</label>
+        <input type="radio" id="map4" name="map" value="?" />
+        <label for="map4">Map4</label>
+        <input type="radio" id="map5" name="map" value="?" />
+        <label for="map5">Map5</label>
+      </section>
+      <section class="class_selection">
+        <p>
+          Choose a class:
+        </p>
+        <input type="radio" id="class1" name="class" value="warrior" />
+        <label for="class1">Warrior</label>
+
+        <input type="radio" id="class2" name="class" value="?" />
+        <label for="class2">Class2</label>
+
+        <input type="radio" id="class3" name="class" value="?" />
+        <label for="class3">Class3</label>
+        <input type="radio" id="class4" name="class" value="?" />
+        <label for="class4">Class4</label>
+      </section>
+      
+            <section class="mode_selection">
+        <p>
+          Choose a mode:
+        </p>
+        <input type="radio" id="mode1" name="mode" value="ffa" />
+        <label for="mode1">Free for all</label>
+
+        <input type="radio" id="mode2" name="mode" value="?" />
+        <label for="mode2">Mode2</label>
+
+        <input type="radio" id="mode3" name="mode" value="?" />
+        <label for="mode3">Mode3</label>
+
+      </section>
+      <br>
+      <section class="validation">
+          <button type="submit">
+        Validate
+      </button>
+      </section>
+    
+    </form>
+      
+
+    <!-- Javascript files -->
+    <script src="fireBase.js"></script>
+  </body>
+</html>
