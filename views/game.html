@@ -4,7 +4,7 @@
     <title>Page principale</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="game.css" media="screen" />
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
@@ -13,73 +13,283 @@
      https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   </head>
   <body>
-
-
     <!-- Javascript files -->
     <script src="/socket.io/socket.io.js"></script>
- 
-   
-    <script src="init.js"></script>
     <script src="fireBase.js"></script>
+    <script src="init.js"></script>
+    <script src="map.js"></script>
+    <script src="draw.js"></script>
+    <script src="menu.js"></script>
+
     <script>
       /** allow us to check if a user is still connected */
       var firebase = app_fireBase;
-      var name = null;
+
       var user = firebase.auth().currentUser;
+      var socket = io();
+      var typing = false;
+
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-          name = user.displayName;
+          socket.name = user.displayName;
         } else {
-          name = "anonymous";
-          console.log("no user detected");
+          socket.name = "Guest_" + Math.floor(Math.random() * Date.now());
         }
-        drawName();
       });
     </script>
-
-    <!-- html elements -->
-
-    <!-- game part -->
-    <div class="side_game"></div>
-    <div class="main">
-      <div class="canvas-container">
-        <canvas id="game_zone-ui-left" width="300" height="512"></canvas>
-        <canvas id="game_zone" width="512" height="512"></canvas>
-        <canvas id="game_zone-ui-right" width="300" height="512"></canvas>
-      </div>
+    <div class="lobbies" style="display: none;">
+      <table id="table-container">
+        <thead>
+          <tr>
+            <th colspan="7">Rooms</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button type="button" onclick="goToMenu()" name="backLobby">Back</button>
     </div>
+    <div class="menu">
+      <button type="button" onclick="goToLobby()">Join a Lobby</button>
+      <button type="button" onclick="goToCreation()">Create a Lobby</button>
+    </div>
+    <div class="option" style="display: none;">
+      <section class="room">
+        <p>
+          Room's name:
+        </p>
+        <input type="text" placeholder="Room_" name="roomName" required />
+      </section>
+      <section class="map_selection">
+        <p>
+          Choose a map:
+        </p>
 
-    <!-- chat part-->
-    <div class="box">
-      <div>Chat</div>
-      <div class="chatBox" id="chat-text"></div>
-      <form id="chat-form">
         <input
-          id="chat-input"
-          type="text"
-          style="width:30%;height:30px;"
+          type="radio"
+          id="map1"
+          name="map"
+          value="forest"
           autocomplete="off"
         />
-        <input class="btn" type="submit" value="Send" />
-      </form>
+        <label for="map1">Forest</label>
+        <span class="infotext">
+          Description de la map et particularité ici.
+        </span>
+
+        <input
+          type="radio"
+          id="map2"
+          name="map"
+          value="mountain"
+          autocomplete="off"
+        />
+        <label for="map2">Mountain</label>
+        <span class="infotext">
+          Description de la map et particularité ici.
+        </span>
+
+        <input type="radio" id="map3" name="map" value="?" autocomplete="off" />
+        <label for="map3">Map3</label>
+        <input type="radio" id="map4" name="map" value="?" autocomplete="off" />
+        <label for="map4">Map4</label>
+        <input type="radio" id="map5" name="map" value="?" autocomplete="off" />
+        <label for="map5">Map5</label>
+      </section>
+      <section class="class_selection">
+        <p>
+          Choose a class:
+        </p>
+        <input
+          type="radio"
+          id="class1"
+          name="class"
+          value="warrior"
+          autocomplete="off"
+        />
+        <label for="class1">Warrior</label>
+        <span class="infotext">
+          Le guerier est équilibré.Combattant au corps à corps. <br />
+          ATK : 8 <br />
+          VITESSE : 10 <br />
+          VIE : 135
+        </span>
+
+        <input
+          type="radio"
+          id="class2"
+          name="class"
+          value="sorcerer"
+          autocomplete="off"
+        />
+        <label for="class2">Sorcerer</label>
+        <span class="infotext">
+          Le sorcier possède une grande force de frappe mais est lent et
+          fragile. <br />
+          ATK : 10<br />
+          VITESSE : 6<br />
+          VIE : 100
+        </span>
+
+        <input
+          type="radio"
+          id="class3"
+          name="class"
+          value="tank"
+          autocomplete="off"
+        />
+        <label for="class3">Tank</label>
+        <span class="infotext">
+          Le tank tire sa force de son endurance.En contrepartie ses dégâts sont
+          amoindris <br />
+          ATK : 5 <br />
+          VITESSE : 10 <br />
+          VIE : 175
+        </span>
+
+        <input
+          type="radio"
+          id="class4"
+          name="class"
+          value="archer"
+          autocomplete="off"
+        />
+        <label for="class4">Archer</label>
+        <span class="infotext">
+          L'archer est rapide. Toutes ses autres caractéristiques sont
+          légérement inférieure <br />
+          ATK : 5 <br />
+          VITESSE : 12 <br />
+          VIE : 115
+        </span>
+      </section>
+
+      <section class="mode_selection">
+        <p>
+          Choose a mode:
+        </p>
+        <input
+          type="radio"
+          id="mode1"
+          name="mode"
+          value="ffa"
+          autocomplete="off"
+        />
+        <label for="mode1">Free for all</label>
+        <span class="infotext">
+          Chacun pour soi, le premier à atteindre le maximum de frag gagne.
+        </span>
+
+        <input
+          type="radio"
+          id="mode2"
+          name="mode"
+          value="survival"
+          autocomplete="off"
+        />
+        <label for="mode2">Survival</label>
+        <span class="infotext">
+          Survivez à de multiples ennemies. Lorsque vous arrivez à bout de la
+          vague. Un ennemi puissant vous attend...
+        </span>
+
+        <input
+          type="radio"
+          id="mode3"
+          name="mode"
+          value="hardcore"
+          autocomplete="off"
+        />
+        <label for="mode3">Hardcore</label>
+        <span class="infotext">
+          Les coups subits sont mortels. La map ne possède plus de limites,
+          l'apparition d'objets est désactivée.
+        </span>
+      </section>
+      <br />
+      <section class="validation">
+        <button type="button" onclick="newGame()">
+          Validate
+        </button>
+        <button type="button" onclick="goToMenu()">Back</button>
+      </section>
+    </div>
+
+    <!-- game part -->
+
+    <div class="main" style="display: none;">
+      <div class="canvas-container">
+        <div class="timer-container">
+          <div class="time">
+            <div id="timer"></div>
+            <div id="hourglass"></div>
+          </div>
+        </div>
+
+        <div class="info-container">
+          <div id="announcement"></div>
+          <div id="scoreboard"></div>
+        </div>
+        <div class="general-container">
+          <canvas id="game_zone-ui-left" width="150" height="150"></canvas>
+        </div>
+
+        <div class="game-container">
+          <canvas id="game_zone"></canvas>
+        </div>
+
+        <div class="info-player-container">
+          <div class="info-bars">
+            <canvas id="game_zone-ui-right" width="100" height="100"></canvas>
+          </div>
+        </div>
+
+        <!-- skills part -->
+        <div class="skill-container">
+          <div class="skill-bar">
+            <div class="skill1"></div>
+            <div class="skill2"></div>
+            <div class="skill3"></div>
+            <div class="skill4"></div>
+          </div>
+        </div>
+
+        <!-- buttons part -->
+        <div class="button-container">
+          <div class="buttons">
+            <button onclick="getReady()" id="ready">Ready</button>
+            <button onclick="surrender()" id="surrender">
+              Surrender
+            </button>
+            <button onclick="playAgain()" id="new">
+              Play again
+            </button>
+            <button onclick="Quit()" id="quit">
+              Quit
+            </button>
+          </div>
+        </div>
+
+        <!-- chat part-->
+        <div class="chat-container">
+          <div class="box">
+            <div class="chatBox" id="chat-text"></div>
+            <form id="chat-form">
+              <input
+                id="chat-input"
+                type="text"
+                style="width:40%;height:20px;"
+                autocomplete="off"
+              />
+              <input class="btn" type="submit" value="Send" />
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
-      var typing = false;
-      var socket = io();
-      //////////////////////////////////////////////////////////////
-      /** charging sprites */
-      /** will be replace by bdd loads */
-      var character = new Image();
-      character.src = "/tileset/images/character";
-      var ennemy = new Image();
-      ennemy.src = "tileset/images/ennemy";
-      var fireball = new Image();
-      fireball.src = "tileset/images/fireball";
-      var map = new Image();
-      map.src = "/tileset/images/map1";
-
       //////////////////////////////////////////////////////////////
       /** game */
       var game = document.getElementById("game_zone").getContext("2d");
@@ -87,328 +297,32 @@
         .getElementById("game_zone-ui-left")
         .getContext("2d");
       game.font = "30px Arial";
+      game.canvas.width = 1280;
+      game.canvas.height = 960;
       left_game.font = "20px Arial";
-       var right_game = document
+      var right_game = document
         .getElementById("game_zone-ui-right")
         .getContext("2d");
       right_game.font = "20px Arial";
-
-      /**
-       * draw the players and the projectiles
-       * @param {list} players - list of players
-       * @param {list} players - list of projectiles
-       */
-      function drawObjects(players, projectiles, ennemies) {
-        // players
-        for (var i in players) {
-          // hpBar
-          var hpBar = (30 * players[i].life) / players[i].maxLife;
-          game.fillStyle = "red";
-          game.fillRect(players[i].x - hpBar / 2, players[i].y - 40, hpBar, 4);
-
-          // player sprite
-          var width = character.width * 2;
-          var height = character.height * 2;
-          game.drawImage(
-            character,
-            0,
-            0,
-            character.width,
-            character.height,
-            players[i].x - width / 2,
-            players[i].y - height / 2,
-            width,
-            height
-          );
-        }
-
-        // projectiles
-        for (var i in projectiles)
-          game.drawImage(
-            fireball,
-            0,
-            0,
-            fireball.width,
-            fireball.height,
-            projectiles[i].x - 5,
-            projectiles[i].y - 5,
-            width - 10,
-            height - 10
-          );
-
-        // ennemies
-        for (var i in ennemies) {
-          var hpBar = (30 * ennemies[i].life) / ennemies[i].maxLife;
-          game.fillRect(
-            ennemies[i].x - hpBar / 8,
-            ennemies[i].y - 20,
-            hpBar,
-            4
-          );
-          game.drawImage(
-            ennemy,
-            0,
-            0,
-            ennemy.width,
-            ennemy.height,
-            ennemies[i].x - width / 2,
-            ennemies[i].y - height / 2,
-            width * 2,
-            height * 2
-          );
-        }
-      }
-
-      /**
-       * draw the HuD, for the moment only the score is displayed
-       */
-      function drawHud() {
-        left_game.fillStyle = "black";
-        left_game.fillText(
-          clientPlayer.list[playerId].frag +
-            "/" +
-            clientPlayer.list[playerId].death +
-            "/" +
-            clientPlayer.list[playerId].score,
-          0,
-          40
-        );
-        
-        right_game.fillStyle = "black";
-        right_game.fillText("HP: " +
-          clientPlayer.list[playerId].life + "/" + clientPlayer.list[playerId].maxLife,
-          0,
-          20
-        );
-      }
-
-      function drawName() {
-        left_game.fillStyle = "black";
-        left_game.fillText(name, 0, 20);
-      }
-
-      //////////////////////////////////////////////////
-      /** chat */
-      var chatText = document.getElementById("chat-text");
-      var chatInput = document.getElementById("chat-input");
-      var chatForm = document.getElementById("chat-form");
-
-      /**
-       * When receiving the call, print the message
-       * @param {String} data - message to print
-       */
-
-      socket.on("printMessage", function(data) {
-        console.log("got a chat message");
-        chatText.innerHTML += '<div class="chatCell">' + data + "</div>";
-        chatText.scrollTop = chatText.scrollHeight;
-      });
-
-      /**
-       * When sending a message, emit a call to the server
-       * @param {event} e - submit event
-       */
-      chatForm.onsubmit = function(e) {
-        //prevent the form from refreshing the page
-        e.preventDefault();
-        //ask to send the message to all the players
-        socket.emit("sendMessage", chatInput.value);
-        chatInput.value = "";
-      };
-
-      ///////////////////////////////////////////////////
-
-      /**
-       * When receiving the call, initialize the objects
-       * @param {list} data - list of players and projectiles to create on the client side
-       */
-      socket.on("init", function(data) {
-        if (data.Id) playerId = data.Id;
-
-        for (var i = 0; i < data.player.length; i++) {
-          clientPlayer(data.player[i]);
-        }
-        for (var i = 0; i < data.projectile.length; i++) {
-          clientProjectile(data.projectile[i]);
-        }
-        for (var i = 0; i < data.ennemy.length; i++) {
-          clientEnnemy(data.ennemy[i]);
-        }
-      });
-
-      /**
-       * When receiving the call, update info
-       *  @param {list} data - list of players and projectiles to create on the client side
-       */
-      socket.on("update", function(data) {
-        for (var i = 0; i < data.player.length; i++) {
-          var player = clientPlayer.list[data.player[i].id];
-          if (player) {
-            if (data.player[i].x !== undefined) player.x = data.player[i].x;
-            if (data.player[i].y !== undefined) player.y = data.player[i].y;
-            if (data.player[i].hp !== undefined)
-              player.life = data.player[i].hp;
-            if (data.player[i].score !== undefined)
-              player.score = data.player[i].score;
-            if (data.player[i].death !== undefined)
-              player.death = data.player[i].death;
-            if (data.player[i].frag !== undefined)
-              player.frag = data.player[i].frag;
-          }
-        }
-        for (var i = 0; i < data.projectile.length; i++) {
-          var p = clientProjectile.list[data.projectile[i].id];
-          if (p) {
-            if (data.projectile[i].x !== undefined) p.x = data.projectile[i].x;
-            if (data.projectile[i].y !== undefined) p.y = data.projectile[i].y;
-          }
-        }
-        for (var i = 0; i < data.ennemy.length; i++) {
-          var e = clientEnnemy.list[data.ennemy[i].id];
-          if (e) {
-            if (data.ennemy[i].x !== undefined) e.x = data.ennemy[i].x;
-            if (data.ennemy[i].y !== undefined) e.y = data.ennemy[i].y;
-            if (data.ennemy[i].hp !== undefined) e.life = data.ennemy[i].hp;
-          }
-        }
-      });
-
-      /**
-       * When receiving the call, delete info
-       *  @param {list} data - list of players and projectiles to create on the client side
-       */
-      socket.on("delete", function(data) {
-        for (var i = 0; i < data.player.length; i++) {
-          delete clientPlayer.list[data.player[i]];
-        }
-        for (var i = 0; i < data.projectile.length; i++) {
-          delete clientProjectile.list[data.projectile[i]];
-        }
-        for (var i = 0; i < data.ennemy.length; i++) {
-          delete clientEnnemy.list[data.ennemy[i]];
-        }
-      });
-
-      //////////////////////////////////////////////////////////
       /**
        * Update the display
        */
-      setInterval(function()
-      {
-        if (!playerId) return;
-        // map
-        game.clearRect(0, 0, 512, 512);
-        game.drawImage(map, 0, 0);
-        if (clientPlayer.list[playerId].score !== lastScore || clientPlayer.list[playerId].frag !== lastFrag ||clientPlayer.list[playerId].death !== lastDeath || clientPlayer.list[playerId].life !== lastLife)
-        {
-          left_game.clearRect(0, 0, 300, 500);
-          right_game.clearRect(0, 0, 300, 500);
-          lastScore = clientPlayer.list[playerId].score;
-          lastFrag = clientPlayer.list[playerId].frag;
-          lastDeath = clientPlayer.list[playerId].death;
-          lastLife = clientPlayer.list[playerId].life;
-          drawHud();
-          //drawName();
-        }
-        drawObjects(
-          clientPlayer.list,
-          clientProjectile.list,
-          clientEnnemy.list
-        );
+      var main = setInterval(function() {
+        mainGame();
       }, 1000 / 60); // 1000ms = 1s
-
-      ////////////////////////////////////////////////////////
-      /** events handler */
-
-      /**
-       * When receiving the call, do one of the actions according to the event's value
-       *  @param {event} event - key pressed event
-       */
-      document.onkeydown = function(event) {
-        if (typing) {
-          event.prevenDefault();
-          return false;
-        }
-        if (event.keyCode === 68)
-          //d
-          socket.emit("keyPress", { inputId: "right", state: true });
-        else if (event.keyCode === 83)
-          //s
-          socket.emit("keyPress", { inputId: "down", state: true });
-        else if (event.keyCode === 81)
-          //q
-          socket.emit("keyPress", { inputId: "left", state: true });
-        else if (event.keyCode === 90)
-          // z
-          socket.emit("keyPress", { inputId: "up", state: true });
-        else if (event.keyCode === 88)
-          // x
-          socket.emit("keyPress", { inputId: "attack", state: true });
-      };
-
-      /**
-       * When receiving the call, do one of the actions according to the event's value
-       *  @param {event} event - key released event
-       */
-      document.onkeyup = function(event) {
-        if (event.keyCode === 68)
-          //d
-          socket.emit("keyPress", { inputId: "right", state: false });
-        else if (event.keyCode === 83)
-          //s
-          socket.emit("keyPress", { inputId: "down", state: false });
-        else if (event.keyCode === 81)
-          //q
-          socket.emit("keyPress", { inputId: "left", state: false });
-        else if (event.keyCode === 90)
-          // z
-          socket.emit("keyPress", { inputId: "up", state: false });
-        else if (event.keyCode === 88)
-          // x
-          socket.emit("keyPress", { inputId: "attack", state: false });
-
-        //user pressed and released enter key
-        if (event.keyCode === 13) {
-          if (!typing) {
-            //user is not already typing, focus our chat text form
-            chatInput.focus();
-          } else {
-            //user sent a message, unfocus our chat form
-            chatInput.blur();
-          }
-        }
-      };
-
-      /**
-       * Change the state of the user : either the user is writing on the chat or the user is playing
-       */
-      document.addEventListener("DOMContentLoaded", function() {
-        document
-          .getElementById("chat-input")
-          .addEventListener("focus", function() {
-            typing = true;
-          });
-        document
-          .getElementById("chat-input")
-          .addEventListener("blur", function() {
-            typing = false;
-          });
-      });
-
-      /*
-      end of game simulation
-       */
-        setInterval(() => {
-           socket.emit("FinP",
-            { "id_partie" : (Math.floor(Math.random() * 50)).toString() ,
-               "datedeb" : new Date() ,
-               "joueur id": playerId,
-                "score":  (Math.floor(Math.random() * 50)).toString() + "/" + (Math.floor(Math.random() * 50)).toString()
-            });
-
-        },30000);
-       
-
     </script>
+
+    <script src="communication.js"></script>
+    <script src="event.js"></script>
+    <script src="timer.js"></script>
+
+    <script>
+      setTimer();
+      var time = setInterval(function() {
+        startGame();
+      }, 1000);
+      //endGame();
+    </script>
+    <script src="chat.js"></script>
   </body>
 </html>

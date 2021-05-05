@@ -86,8 +86,6 @@ jeu :
 - objectifs
 - tableau de score
 
-
-
 ////////////////////////////////////
 Semaine 2
 nouvelles ressources :
@@ -127,3 +125,77 @@ http://www.regular-expressions.info/lookaround.html pour le Regex
 - 3 canvas au lieu d'un, les 2 autres serviront pour l'hud 
   -> on pourrait les superposer mais il faut alors supprimer header et footer
 - 1ere Page de menu de selection, la page est lié au serveur mais pas au jeu (on peut la tester et s'assurait que les info sont envoyés aux serveur)
+
+/////////////////////////////////////////////////////////////////////
+semaine 3:
+-ajax
+https://www.w3schools.com/asp/asp_ajax_intro.asp
+
+Ressources :
+- A star algorithm  -> est un algo pour trouver le plus court chemin, similaire a Dijkstra pour l'IA
+ https://github.com/bgrins/javascript-astar
+ 
+- site pour custom les sprites  (site un peu lent)
+https://sanderfrenken.github.io/Universal-LPC-Spritesheet-Character-Generator/#?body=skeleton&brain_blood=1&ribs_blood=1&arm_blood=1&sex=male&mouth_blood=0&weapon=scythe
+
+- animer un perso avec un spritesheet
+ https://dev.to/martyhimmel/animating-sprite-sheets-with-javascript-ag3
+ 
+- animate a spritesheet on html with css
+https://blog.logrocket.com/making-css-animations-using-a-sprite-sheet/
+
+- faire apapraitre et disparaitre du texte html un nombre de fois prédéfinis
+https://stackoverflow.com/questions/35556876/javascript-repeat-a-function-x-amount-of-times
+https://www.computerhope.com/issues/ch001651.htm#javascript
+
+- import and exports js file
+https://javascript.info/import-export
+
+- cropped images
+https://ezgif.com/
+
+- auto resize background image in a div 
+https://developer.mozilla.org/en-US/docs/Web/CSS/background-size
+
+- some attacks/icons sprite sheet
+https://opengameart.org/content/extended-lpc-magic-pack
+
+- systeme de room via socketIO
+https://socket.io/docs/v3/rooms/index.html
+
+platforme de conception graphique: pour tout les logos et images pour notre site 
+https://www.canva.com/
+
+FAIT :
+- L'utlisateur non inscrit ou non connecté ne peut plus accéder aux pages de profil et historique via l'url
+- premiere animation du personnage quand il se déplace
+- la page menu est ajouté au site, maintenant il faut choisir ses options avant de passer au jeu. Pour le moment il y a 2 maps, 4 classes et 1 mode
+- des fichiers comme event, map ont été crée (24/04) pour plus de clarté (tous les fichiers crées apres cette date ne seront pas ajoutés dans les ressources)
+- premiere version de collision :
+1.on prend la map au format json pour avoir une matrice de la map
+2.on vérifie naivement si le mouvement est valide
+  -> l'ennemi a une IA puante et des qu'il touche un mur il s'arrete donc pas de collision pour lui pour le moment. 
+    -> 2 solutions: on passe a une représentation diff des collisions mais ça demande de refaire toute la partie pour le joueur
+    ->ou on change le comportement de l'AI : au lieu de suivre le joueur, il aura un périmètre d'aggression + une ligne de vue -> si joueur dedans, il le suit + attaque sinon continue de se ballader aléatoirement
+- fenetre popup avec descriptif dans le menu
+- questionnement : retour en arriere par rapport a la semaine 2 : faut il utiliser 3 canvas (ou plus) ? un canvas + DOM encore mieux ?
+- ajout d'un bouton pour se mettre pret
+- le pseudo apparait maintenant lorsque qu'on envoie un message dans le chat
+- les invités ont maintenant un nom de la forme "Guest_number" ou number est généré aléatoirement selon la date. 
+  -> aucune garantie totale que l'id est unique
+- ajout de message privé dans le chat
+- ajustement du spawn des ennmies, ils ne peuvent plus apparaitre dans un obstacles
+- ajout d'un bouton surrender
+- les 4 skins pour les classes sont faites et ajoutés
+- ajout d'une barre de skills
+- ajout de l'attaque au corps a corps avec animation (il manque une image de transition donc ça clip à la fin de l'anime)
+- systeme de lobby 
+- ajout d'une fonction pour démarrer une game sinon on attend 
+
+fait mais non utilisé pour le moment ou encore en phase de test:
+- fonction d'annoncements
+- écran de fin de game 
+- ajout d'un timer dans la partie (apparait mais n'a aucune impact pour le moment)
+- en fin cas de surrender, le score est ajouté a la BDD
+
+

@@ -27,7 +27,8 @@
     "send": "^0.17.1",
     "socket.io": "^4.0.1",
     "utils-merge": "^1.0.1",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "javascript-astar": "^0.4.1"
   },
   "engines": {
     "node": "12.x"
