@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="profil.css" media="screen" />
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
@@ -13,7 +14,6 @@
      https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
-
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   </head>
   <body>
@@ -36,9 +36,10 @@
           var nameTag = document.getElementById("name");
           var mailTag = document.getElementById("email");
           nameTag.innerHTML += name;
-          mailTag.innerHTML += email;
+          mailTag.innerHTML += "<a id='mail_account' href='mailto:"+email+"'>"+email+"</a>";
         } else {
           console.log("no user detected");
+          window.location.replace("index.html");
         }
       });
     </script>
@@ -88,11 +89,11 @@
 
                       <!-- /input-group -->
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 rank-status">
                       <span><p>Aspirant</p></span>
                     </div>
                     <div class="clearfix"></div>
-                    <hr style="margin:5px 0 5px 0;" />
+                    <hr style="margin:5px 0 30px 0;" />
 
                     <div class="col-sm-5 col-xs-6 tital ">Name:</div>
 
@@ -104,7 +105,7 @@
                     <div class="col-sm-5 col-xs-6 tital ">
                       Date Of Joining:
                     </div>
-                    <div class="col-sm-7">15 Jun 2016</div>
+                    <div class="col-sm-7">24 Avril 2021</div>
 
                     <div class="clearfix"></div>
                     <div class="bot-border"></div>

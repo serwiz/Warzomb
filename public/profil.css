@@ -1,0 +1,33 @@
+.tital {
+  font-weight: bold;
+  color: white;
+  font-size: 20px;
+  margin: auto;
+  background-color: #1abc9c ;
+  /*border-bottom: 2px solid #1abc9c;*/
+  width: 50%;
+  padding: 10px
+}
+
+.col-sm-7 {
+  margin: 15px auto 25px auto;
+  width:50%;
+  
+}
+
+.rank-status {
+  font : 20px bold;
+}
+
+#mail_account {
+  color: #1abc9c;
+  text-decoration: none;
+}
+
+#mail_account:hover {
+  border-bottom: 1px solid #1abc9c;
+}
+
+hr {
+  color: #1abc9c;
+}

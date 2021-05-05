@@ -9,6 +9,7 @@ dependencies:
   firebase-admin: 9.6.0
   firebase-functions: 3.13.2
   firebase-tools: 9.10.0
+  javascript-astar: 0.4.1
   merge-descriptors: 1.0.1
   methods: 1.1.2
   path-to-regexp: 6.2.0
@@ -2957,6 +2958,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
+  /javascript-astar/0.4.1:
+    dev: false
+    resolution:
+      integrity: sha1-5J3ZoVNcmphnUJH3JY5p2YOBFwM=
   /jju/1.4.0:
     dev: false
     resolution:
@@ -5156,6 +5161,7 @@ specifiers:
   firebase-admin: ^9.6.0
   firebase-functions: ^3.13.1
   firebase-tools: ^9.9.0
+  javascript-astar: ^0.4.1
   merge-descriptors: ^1.0.1
   methods: ^1.1.2
   path-to-regexp: ^6.2.0
