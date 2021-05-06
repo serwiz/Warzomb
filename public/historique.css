@@ -22,7 +22,7 @@ td {
 }
 
 #table > thead > tr > td {
-  background-color: #1abc9c;
+  background-color: rgba(216, 106, 23, 1);
   color: white;
   text-transform: capitalize;
   font-weight: bold;
@@ -44,6 +44,6 @@ td {
 
 #table > tbody > tr > td {
   
-  border: 2px solid #1abc9c;
+  border: 2px solid rgba(216, 106, 23, 0.5);
   
 }

@@ -23,11 +23,13 @@ body {
 /* Header/logo Title */
 .header {
   padding: 80px;
+  height: 225px;
   text-align: center;
-  background: url("../tileset/images/banniere2.png") no-repeat;
+  background: url("../tileset/images/WarZomb3.png") no-repeat;
   background-size: cover;
   color: white;
 }
+
 
 /* Increase the font size of the heading */
 .header h1 {
@@ -37,7 +39,8 @@ body {
 /* Style the top navigation bar */
 .navbar {
   overflow: hidden;
-  background-color: #333;
+  background-color: #FFF;
+  border-bottom: 1px solid #D86A17;
 }
 
 /* Style the navigation bar links */
@@ -62,8 +65,9 @@ body {
 }
 /* Change color on hover */
 .navbar a:hover {
-  background-color: #ddd;
+  background-color: rgba(216, 106, 23, 0.4);
   color: black;
+  transition: 0.2s background-color;
 }
 
 /* Column container */
@@ -101,7 +105,7 @@ body {
 
 /* Fake image, just for this example */
 .fakeimg {
-  background-color: #aaa;
+  background-color: rgba(216, 106, 23, 1);
   width: 100%;
   padding: 20px;
 }
@@ -125,6 +129,17 @@ body {
   .navbar a {
     float: none;
     width: 100%;
+  }
+}
+
+@media screen and (min-width 1600px) {
+  .header {
+    padding: 80px;
+    height: 225px;
+    text-align: center;
+    background: url("../tileset/images/WarZomb3.png") no-repeat;
+    background-size: cover;
+    color: white;
   }
 }
 
