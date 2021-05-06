@@ -28,6 +28,7 @@ body {
   background: url("../tileset/images/WarZomb3.png") no-repeat;
   background-size: cover;
   color: white;
+  transition: 0.5s ease all;
 }
 
 
@@ -132,14 +133,9 @@ body {
   }
 }
 
-@media screen and (min-width 1600px) {
+@media screen and (min-width: 1201px) {
   .header {
-    padding: 80px;
-    height: 225px;
-    text-align: center;
-    background: url("../tileset/images/WarZomb3.png") no-repeat;
-    background-size: cover;
-    color: white;
+    height: 300px;
   }
 }
 
