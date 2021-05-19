@@ -28,9 +28,9 @@
       // firebase.auth.PhoneAuthProvider.PROVIDER_ID
     ],
     // Terms of service url.
-    tosUrl: "index.html",
+    tosUrl: "https://cloud.google.com/terms/",
     // Privacy policy url.
-    privacyPolicyUrl: "<your-privacy-policy-url>"
+    privacyPolicyUrl: "https://firebase.google.com/support/privacy/"
 
     // The start method will wait until the DOM is loaded.
   };

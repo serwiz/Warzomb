@@ -14,6 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
   </head>
   <body>
     <!-- Javascript files -->
@@ -22,7 +23,6 @@
     <script src="init.js"></script>
     <script src="map.js"></script>
     <script src="draw.js"></script>
-    <script src="menu.js"></script>
 
     <script>
       /** allow us to check if a user is still connected */
@@ -56,12 +56,6 @@
       <button type="button" onclick="goToCreation()">Create a Lobby</button>
     </div>
     <div class="option" style="display: none;">
-      <section class="room">
-        <p>
-          Room's name:
-        </p>
-        <input type="text" placeholder="Room_" name="roomName" required />
-      </section>
       <section class="map_selection">
         <p>
           Choose a map:
@@ -83,22 +77,39 @@
           type="radio"
           id="map2"
           name="map"
-          value="mountain"
+          value="cavern"
           autocomplete="off"
+          required
         />
-        <label for="map2">Mountain</label>
+        <label for="map2">Cavern</label>
         <span class="infotext">
           Description de la map et particularité ici.
         </span>
 
-        <input type="radio" id="map3" name="map" value="?" autocomplete="off" />
-        <label for="map3">Map3</label>
-        <input type="radio" id="map4" name="map" value="?" autocomplete="off" />
-        <label for="map4">Map4</label>
-        <input type="radio" id="map5" name="map" value="?" autocomplete="off" />
-        <label for="map5">Map5</label>
+        <input
+          type="radio"
+          id="map3"
+          name="map"
+          value="city"
+          autocomplete="off"
+          required
+        />
+        <label for="map3">City</label>
+        <span class="infotext">
+          Description de la map et particularité ici.
+        </span>
+        <input type="radio" id="map4" name="map" value="swamp" autocomplete="off" />
+        <label for="map4">Swamp</label>
+        <span class="infotext">
+          Description de la map et particularité ici.
+        </span>
+        <input type="radio" id="map5" name="map" value="desert" autocomplete="off" />
+        <label for="map5">Desert</label>
+        <span class="infotext">
+          Description de la map et particularité ici.
+        </span>
       </section>
-      <section class="class_selection">
+      <section class="class_selection" name = "class_selection">
         <p>
           Choose a class:
         </p>
@@ -108,6 +119,7 @@
           name="class"
           value="warrior"
           autocomplete="off"
+          required
         />
         <label for="class1">Warrior</label>
         <span class="infotext">
@@ -176,6 +188,7 @@
           name="mode"
           value="ffa"
           autocomplete="off"
+          required
         />
         <label for="mode1">Free for all</label>
         <span class="infotext">
@@ -193,19 +206,6 @@
         <span class="infotext">
           Survivez à de multiples ennemies. Lorsque vous arrivez à bout de la
           vague. Un ennemi puissant vous attend...
-        </span>
-
-        <input
-          type="radio"
-          id="mode3"
-          name="mode"
-          value="hardcore"
-          autocomplete="off"
-        />
-        <label for="mode3">Hardcore</label>
-        <span class="infotext">
-          Les coups subits sont mortels. La map ne possède plus de limites,
-          l'apparition d'objets est désactivée.
         </span>
       </section>
       <br />
@@ -233,7 +233,7 @@
           <div id="scoreboard"></div>
         </div>
         <div class="general-container">
-          <canvas id="game_zone-ui-left" width="150" height="150"></canvas>
+          <canvas id="game_zone-ui-left"></canvas>
         </div>
 
         <div class="game-container">
@@ -242,7 +242,7 @@
 
         <div class="info-player-container">
           <div class="info-bars">
-            <canvas id="game_zone-ui-right" width="100" height="100"></canvas>
+            <canvas id="game_zone-ui-right"></canvas>
           </div>
         </div>
 
@@ -252,7 +252,6 @@
             <div class="skill1"></div>
             <div class="skill2"></div>
             <div class="skill3"></div>
-            <div class="skill4"></div>
           </div>
         </div>
 
@@ -291,25 +290,48 @@
     </div>
     <script>
       //////////////////////////////////////////////////////////////
+      var WIDTH = 1920;
+      var HEIGHT = 1080;
+      var CANVAS_WIDTH = 500;
+      var CANVAS_HEIGHT = 500;
       /** game */
-      var game = document.getElementById("game_zone").getContext("2d");
-      var left_game = document
-        .getElementById("game_zone-ui-left")
-        .getContext("2d");
-      game.font = "30px Arial";
-      game.canvas.width = 1280;
-      game.canvas.height = 960;
-      left_game.font = "20px Arial";
-      var right_game = document
-        .getElementById("game_zone-ui-right")
-        .getContext("2d");
-      right_game.font = "20px Arial";
+      var canvas = document.getElementById("game_zone");
+      var left_canvas = document.getElementById("game_zone-ui-left");
+      var right_canvas = document.getElementById("game_zone-ui-right");
+      var game = canvas.getContext("2d");
+      var left_game =left_canvas.getContext("2d");
+      var right_game = right_canvas.getContext("2d");
+
+      /**
+       * Responsive canvas
+       */
+      var resize = function() {
+        var ratio = 16/9;
+        if (CANVAS_HEIGHT < CANVAS_WIDTH / ratio) CANVAS_WIDTH = CANVAS_HEIGHT * ratio;
+        else CANVAS_HEIGHT = CANVAS_WIDTH / ratio;
+        CANVAS_WIDTH = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth ;
+        CANVAS_HEIGHT =window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ;
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+        canvas.style.width = '' + CANVAS_WIDTH + 'px';
+        canvas.style.height = '' + CANVAS_HEIGHT + 'px';
+        game.font = "30px Arial";
+        left_canvas.style.width = '' + CANVAS_WIDTH / 10+ 'px';
+        left_canvas.style.height = '' + CANVAS_HEIGHT / 10+ 'px';
+        left_game.font = "" + 2 +"vw Arial";
+        right_canvas.style.width = '' + CANVAS_WIDTH / 10+ 'px';
+        right_canvas.style.height = '' + CANVAS_HEIGHT / 10+ 'px';
+        right_game.font = "" + 1 +"vw Arial";
+      };
+      window.addEventListener("resize", function() {
+      resize();
+      });
+
+      resize();
       /**
        * Update the display
        */
-      var main = setInterval(function() {
-        mainGame();
-      }, 1000 / 60); // 1000ms = 1s
+      mainGame();
     </script>
 
     <script src="communication.js"></script>
@@ -317,12 +339,12 @@
     <script src="timer.js"></script>
 
     <script>
-      setTimer();
-      var time = setInterval(function() {
+      var pregame = null;
+      if (!pregame) pregame = setInterval(function() {
         startGame();
       }, 1000);
-      //endGame();
     </script>
     <script src="chat.js"></script>
+    <script src="menu.js"></script>
   </body>
 </html>

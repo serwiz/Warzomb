@@ -1,9 +1,8 @@
 var SOCKET_LIST = [];
-var INIT_DATA = { player: [], projectile: [], enemy: [], lobby: [] };
-var REMOVE_DATA = { player: [], projectile: [], enemy: [] };
-var enemySpawn = null;
+var INIT_DATA = { player: [], projectile: [], enemy: [], object : [] };
+var REMOVE_DATA = { player: [], projectile: [], enemy: [], object : [], lobby:[] };
 var clientRooms = {};
-var Rooms = {}
+var Rooms = {};
 
 module.exports = {
   SOCKET_LIST,

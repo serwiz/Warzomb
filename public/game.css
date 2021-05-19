@@ -3,19 +3,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin:0px;
+  padding:0px;
 
   background-color: #2c3e50;
   color: #ecf0f1;
   font-family: sans-serif;
   line-height: 1.4;
+  overflow: hidden
 }
 
-.map_selection, .class_selection, .mode_selection, .validation{
-   text-align:center;
+.map_selection,
+.class_selection,
+.mode_selection,
+.validation {
+  text-align: center;
 }
 
-
-button  {
+button {
   display: inline-block;
   box-shadow: 1px 1px grey;
   border-radius: 3px;
@@ -25,21 +30,21 @@ button  {
   cursor: pointer;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid black;
-  width : 100%
+  width: 100%;
 }
-
 
 /** https://stackoverflow.com/questions/49243460/how-to-check-if-a-input-type-button-is-checked */
 
 /* Hide the checkboxes */
 input[type="radio"] {
   display: none;
-} 
+}
 /* Default styling for labels to make them look like buttons */
 input[type="radio"] + label {
- 
   display: inline-block;
   box-shadow: 1px 1px grey;
   border-radius: 3px;
@@ -55,13 +60,13 @@ input[type="radio"]:checked + label {
   background-color: #808080;
 }
 
-p, .room {
+p{
   text-align: center;
 }
 
 /* popup window on mouseover */
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip */
- .infotext {
+.infotext {
   visibility: hidden;
   width: 200px;
   background-color: #6699CC;
@@ -77,7 +82,6 @@ p, .room {
 label:hover + .infotext {
   visibility: visible;
 }
-
 
 /* game */
 
@@ -114,11 +118,12 @@ label:hover + .infotext {
 }
 
 .chatCell {
+  font-size: 0.8vw;
   background: transparent;
   width: 100%;
   height: 15%;
   margin: auto auto 5px auto;
-  color : black;
+  color: black;
 }
 
 .btn {
@@ -135,15 +140,16 @@ label:hover + .infotext {
 /** skills bar */
 .skill-bar {
   position: absolute;
+  right: 0;
   bottom: 5%;
-  width: 250px;
+  width: 200px;
   height: 50px;
 }
 
 #game_zone-ui-right {
   position: absolute;
-  right: 10%;
-  top : 20%
+  right: 0;
+  top: 0;
 }
 
 .buttons {
@@ -163,12 +169,9 @@ label:hover + .infotext {
 }
 
 .info-bars {
-  position : absolute;
-  right: 5%;
-  background: url("../tileset/images/ui_bar");
-  background-size: cover;
-  background-size: contain;
-  height: 40px;
+  position: absolute;
+  right: 0;
+  height: 80px;
   width: 120px;
 }
 
@@ -178,16 +181,17 @@ label:hover + .infotext {
   height: 42px;
   width: 42px;
   background: url("../tileset/images/hourglass");
-  postion: absolute;
+  position: absolute;
   display: inline-block;
   animation: sprite 5s steps(15) infinite;
   transform: translate(-25%, -25%) scale(0.5);
+  right: 10%;
 }
 
 #timer {
-  postion: absolute;
+  position: absolute;
   display: inline-block;
-  color : black;
+  color: black;
 }
 @keyframes sprite {
   to {
@@ -203,14 +207,11 @@ label:hover + .infotext {
 
 .skill1,
 .skill2,
-.skill3,
-.skill4 {
+.skill3 {
   width: 50px;
   height: 50px;
   display: inline-block;
-  background: url("../tileset/images/ui_skill");
-  background-size: cover;
-  background-size: contain;
+  background-size:100% auto;
 }
 
 #new,
@@ -226,7 +227,10 @@ label:hover + .infotext {
   grid-template-rows: repeat(5, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .game-container {
@@ -247,6 +251,7 @@ label:hover + .infotext {
 .chat-container {
   grid-area: 5 / 1 / 6 / 3;
   position: relative;
+  opacity: 0.3;
 }
 .timer-container {
   grid-area: 1 / 3 / 2 / 4;

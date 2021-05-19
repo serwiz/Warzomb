@@ -1,26 +1,44 @@
 /**
  * Time related functions
  */
-var minutes = 3;
+var minutes = 0;
 var seconds = 0;
 
 /**
  * set a timer
  */
 function setTimer() {
-  var x = setInterval(function() {
+  $("#hourglass").show();
+    timer = setInterval(function() {
     document.getElementById("timer").innerText = minutes + ":" + seconds;
-    if (!seconds && minutes) {
-      minutes--;
-      seconds = 60;
+    if (seconds === 60) {
+      minutes++;
+      seconds = 0;
     }
-    if (seconds) seconds--;
-
-    // If the count down is over, write some text
-    if (minutes <= 0 && seconds <= 0) {
-      clearInterval(x);
-      $("#timer").empty();
+    var chrono = seconds + 60 * minutes;
+    if (chrono % 45 === 0 && chrono !== 0) {
+      $.ajax({
+        url: "/nextWave",
+        method: "POST",
+        data : {room:gameRoom}
+      })
+        .done(function(response) {
+          console.log(response);
+          repeat(blinkWave, 5);
+          setTimeout(function() {
+            $("#announcement").empty();
+          }, 5000);
+        })
+        .fail(function(error) {
+          console.log("request fail");
+          error.message;
+          error.errors;
+        })
+        .always(function() {
+          console.log("Request done");
+        });
     }
+    seconds ++;
   }, 1000);
 }
 
@@ -55,18 +73,18 @@ function startGame() {
     $(".info-player-container").show();
     $(".timer-container").show();
     $(".skill-container").show();
-
-    clearInterval(time);
+    clearInterval(pregame);
+    pregame = null;
     if (Option.list[gameRoom].mode === "survival") {
       $.ajax({
         url: "/start",
-        method: "GET"
+        method: "POST",
+        data: { room: gameRoom}
       })
         .done(function(response) {
-          minutes = 0;
-          seconds = 0;
           console.log(response);
-          repeat(blink, 5);
+          setTimer();
+          repeat(blinkStart, 5);
           setTimeout(function() {
             $("#announcement").empty();
           }, 5000);
@@ -80,13 +98,26 @@ function startGame() {
           console.log("Request done");
         });
     } else if (Option.list[gameRoom].mode === "ffa") {
-      console.log("mode ffa");
-      repeat(blink, 5);
-      setTimeout(function() {
-        $("#announcement").empty();
-      }, 5000);
-    } else if (Option.list[1].mode === "hardcore") {
-      console.log("mode hardcore");
+      $.ajax({
+        url: "/start",
+        method: "POST",
+        data: { room: gameRoom }
+      })
+        .done(function(response) {
+          console.log(response);
+          repeat(blinkStart, 5);
+          setTimeout(function() {
+            $("#announcement").empty();
+          }, 5000);
+        })
+        .fail(function(error) {
+          console.log("request fail");
+          error.message;
+          error.errors;
+        })
+        .always(function() {
+          console.log("Request done");
+        });
     }
     return;
   }
@@ -96,6 +127,5 @@ function startGame() {
  * Display EndScreen when the game is finished
  */
 function endGame() {
-  //clearInterval(main);
   drawEndScreen();
 }

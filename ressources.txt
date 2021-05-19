@@ -198,4 +198,58 @@ fait mais non utilisé pour le moment ou encore en phase de test:
 - ajout d'un timer dans la partie (apparait mais n'a aucune impact pour le moment)
 - en fin cas de surrender, le score est ajouté a la BDD
 
+////////////////////////////////////////////////////////////////////
+semaine 4 :
+Ressources :
+- A star algorithm  -> est un algo pour trouver le plus court chemin, similaire a Dijkstra pour l'IA
+ https://github.com/bgrins/javascript-astar
+-requestAnimationFrame
+https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 
+- color picker
+https://chrome.google.com/webstore/detail/colorzilla/bhlhnicpbhignbdhedgjhgdocnmhomnp?hl=fr
+
+- responsive Grid
+https://blogs.infinitesquare.com/posts/web/creer-une-mise-en-page-avec-css-grid-layout
+
+- responsive text
+https://www.w3schools.com/howto/howto_css_responsive_text.asp
+
+- click event
+https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event
+
+- opacity et set propriété CSS avec jquery
+https://www.w3schools.com/css/css_image_transparency.asp
+https://api.jquery.com/css/
+
+-read a json file
+https://stackabuse.com/reading-and-writing-json-files-with-node-js/
+
+
+FAIT :
+- l'écran de fin affiche maintenant l'issu de la partie
+- le serveur nettoie correctement les données liée à une partie si le joueur quitte en fermant la page 
+- la page de lobby n'affiche plus les parties deja commencés
+- alerte dans le lobby lorsque qu'un joueur rejoint la partie
+- l'attaque au corps a corps peut maintenant toucher les alliés dans le mode ffa 
+- le mode ffa est ajouté mais la fin de jeu demande d'attaquer une fois de plus que nécessaire pour un sorcier (check le projectile car il faut tirer pour mettre a jour les frags)
+- la hitbox de l'attaque du cac est revue
+- ajout d'une barre de stamina
+- le pathfinding pour les ennemies a été ajouté. marche mais hitbox pas très clean. (la hitbox de l'ennemi est au centre donc le bord de l'image peut "rentrer" dans l'obstacle)
+- ajout d'objets : soin ou stamina regen ou ult boost en passant dessus.
+- pour dessiner le jeu (fonction mainGame) : passage d'un setInterval à requestAnimationFrame
+  -> plus optimisé car rAF attend que la page soit prête à dessiner et adapte le temps de rafraichissement selon le navigateur (par défaut 60 fps)
+  + rAF se met en pause lorsque l'utilisateur n'est plus sur la page.
+- l'attaque au cac ne clip plus a la fin de l'anime
+- le joueur peut maintenant choisir son personnage quand il rejoint le lobby
+- bar d'ultime ajoutée
+- l'utilisateur ne peut plus rejoindre / créer une salle s'il manque une option
+- l'écran du jeu est responsive (pas parfait)
+- animation pour toutes les attaques de bases + tous les skills sont implentés 
+- refonte de la hitbox des projectiles, l'attaque distance touche mieux
+- Maps ajoutées
+- spawn random sur 4 places
+- l'ennemi attaque
+- mode zombie ajouté
+- ajustement du chat : texte responsive et chat transparent quand il n'est pas utilisé pour éviter de gêner le joueur
+- les classes sont init avec un fichier json
