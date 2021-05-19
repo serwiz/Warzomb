@@ -12,25 +12,28 @@ class Lobby {
     this.map = map;
     this.mode = mode;
     this.id = id;
-    this.maxCapacity = 4;
+    this.capacity = 4;
+    this.numberPlayers = 0;
     this.beginning = new Date();
-    this.objects = true;
-
+    this.state = false;
+    
+    //interval variables
+    this.staminaId = null;
+    this.objectId = null;
     switch (mode) {
       case "ffa":
-        this.maxFrag = 20;
+        this.maxFrag = 1;
         break;
       case "survival":
-        this.timer = 5;
         this.numberEnemies = Math.random() * 10 + 3;
         this.respawnTime = Math.random() * 20 + 5;
-        break;
-      case "hardcore":
-        this.multiply = 1.5;
-        this.objects = false;
+        this.wave = 1;
+        this.spawnActivation = false;
+        this.spawnId = null;
         break;
     }
   }
 }
+
 
 module.exports = Lobby;

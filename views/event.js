@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////////
 /** events handler */
 
 /**
@@ -6,11 +5,19 @@
  *  @param {event} event - key pressed event
  */
 document.onkeydown = function(event) {
-  if (playerId && gameRoom)
-    if (!Option.list[gameRoom].start) {
-      return;
-    }
-  if (clientPlayer.list[playerId].inAction) return;
+  if (!playerId) return;
+  if (
+    gameRoom &&
+    Option.list[gameRoom] !== undefined &&
+    !Option.list[gameRoom].start
+  )
+    return;
+  if (
+    clientPlayer.list[playerId] !== undefined &&
+    (clientPlayer.list[playerId].inAction ||
+      clientPlayer.list[playerId].useSkill)
+  )
+    return;
   if (typing) {
     return;
   }
@@ -29,6 +36,12 @@ document.onkeydown = function(event) {
   else if (event.keyCode === 88)
     // x
     socket.emit("keyPress", { inputId: "attack", state: true });
+  else if (event.keyCode === 65)
+    // a
+    socket.emit("keyPress", { inputId: "skill", state: true });
+  else if (event.keyCode === 69)
+    // e
+    socket.emit("keyPress", { inputId: "ultimate", state: true });
 };
 
 /**
@@ -51,6 +64,12 @@ document.onkeyup = function(event) {
   else if (event.keyCode === 88)
     // x
     socket.emit("keyPress", { inputId: "attack", state: false });
+  else if (event.keyCode === 65)
+    // a
+    socket.emit("keyPress", { inputId: "skill", state: false });
+  else if (event.keyCode === 69)
+    // e
+    socket.emit("keyPress", { inputId: "ultimate", state: false });
 
   //user pressed and released enter key
   if (event.keyCode === 13) {
@@ -70,9 +89,11 @@ document.onkeyup = function(event) {
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("chat-input").addEventListener("focus", function() {
     typing = true;
+    $(".chat-container").css("opacity", 1);
   });
   document.getElementById("chat-input").addEventListener("blur", function() {
     typing = false;
+    $(".chat-container").css("opacity", 0.3);
   });
 });
 
@@ -89,6 +110,13 @@ $("#ready").on("keydown", function(e) {
  * Change the state of the player
  */
 function getReady() {
+  var countPlayers = 0;
+  for (var i in clientPlayer.list) {
+    if (clientPlayer.list[i].room === gameRoom) countPlayers++;
+  }
+  if (countPlayers === 1 && Option.list[gameRoom].mode === "ffa") {
+    return;
+  }
   if (clientPlayer.list[playerId].ready) {
     clientPlayer.list[playerId].ready = false;
     console.log("player " + playerId + " is not ready");
@@ -119,15 +147,26 @@ function surrender() {
       result: "lose",
       id: clientPlayer.list[playerId].id
     });
-    endGame();
+
+    gameRoom = null;
+    clearInterval(pregame);
+    clearInterval(timer);
+    pregame = null;
+    timer = null;
+    minutes = 0;
+    seconds = 0;
+    $("#timer").empty();
   }
 }
 
 function playAgain() {
+  $("#announcement").empty();
+  game.globalAlpha = 1;
+  minutes = 0;
+  seconds = 0;
   goToMenu();
 }
 function Quit() {
   // return index
-  gameRoom = null;
   window.location.replace("index.html");
 }

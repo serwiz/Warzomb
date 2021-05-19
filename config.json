@@ -1,45 +1,33 @@
 {
-    "Personnages" :
-    {
+  "sorcerer": {
+    "class": "sorcerer",
+    "maxLife": 150,
+    "speedMove": 3,
+    "maxStamina": 130,
+    "atk": 10
+  },
 
-                "Sorcier":
-                    {
-                    "nom": "mage",
-                    "url": "http://www.google.fr"
-                    },
+  "tank": {
+    "class": "tank",
+    "maxLife": 225,
+    "speedMove": 4,
+    "maxStamina": 150,
+    "atk": 6
+  },
 
-                "Tank":
-                    {
-                        "nom": "sdqdqsdqd",
-                        "url": "lien"
-                    },
-                    
-                "Epeiste":
-                    {
-                        "nom": "dsqdqsdq",
-                        "url": "lien"
-                    },
+  "warrior": {
+    "class": "warrior",
+    "maxLife": 175,
+    "speedMove": 4,
+    "maxStamina": 150,
+    "atk": 8
+  },
 
-                "Tireur":
-                    {
-                        "nom": "sddqsdqd",
-                        "url": "lien"
-                    }
-    },
-        
-    "Zombies":
-    {
-
-                "1":{
-                     "nom":"dsqdqsdq",
-                     "lien": "lein"
-                    },
-                "2":
-                {
-                    "nom": "dsqdqsdq",
-                    "lien": "lein"
-                }
-
-    }
-
+  "archer": {
+    "class": "archer",
+    "maxLife": 150,
+    "speedMove": 5,
+    "maxStamina": 175,
+    "atk": 6
+  }
 }
