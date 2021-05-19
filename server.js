@@ -245,6 +245,22 @@ io.sockets.on("connection", function(socket) {
 
     socket.leave(data.room);
     global.REMOVE_DATA.player.push(socket.id);
+    var countPlayers = 0;
+    for (var i in Entity.Player.list) {
+      if (Entity.Player.list[i].room === data.room) countPlayers += 1;
+    }
+
+    if (countPlayers === 2 && global.Rooms[data.room].mode === "ffa") {
+      for (var i in Entity.Player.list) {
+        if (Entity.Player.list[i].id !== socket.id) {
+          var message = "Victory";
+          global.SOCKET_LIST[i].emit("closeGame", message);
+          Entity.Player.list[i].reset();
+          global.SOCKET_LIST[i].leave(data.room);
+          global.REMOVE_DATA.player.push(i);
+        }
+      }
+    }
     // removing properties
     if (
       global.Rooms[data.room].mode === "survival" &&

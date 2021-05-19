@@ -45,7 +45,7 @@ class Player extends Element {
       id: this.id,
       x: this.x,
       y: this.y,
-      room:this.room,
+      room: this.room,
       name: this.name,
       hp: this.life,
       hpmax: this.maxLife,
@@ -56,8 +56,8 @@ class Player extends Element {
       ready: this.ready,
       stamina: this.stamina,
       maxStamina: this.maxStamina,
-      ult : this.ult,
-      maxUlt:this.maxUlt
+      ult: this.ult,
+      maxUlt: this.maxUlt
     });
   }
 
@@ -65,7 +65,7 @@ class Player extends Element {
    * set paramaters for a specific class
    * @param {List} config - list of parameters
    */
-  setParameters (config) {
+  setParameters(config) {
     this.life = config.maxLife;
     this.maxLife = config.maxLife;
     this.speedMove = config.speedMove;
@@ -78,8 +78,8 @@ class Player extends Element {
   /**
    * Set a random spawn
    */
-  setSpawn () {
-    switch(Math.floor(Math.random() * 4 + 1)){
+  setSpawn() {
+    switch (Math.floor(Math.random() * 4 + 1)) {
       case 1:
         this.x = Map.spawn[1][1] * Map.TILE_SIZE;
         this.y = Map.spawn[1][0] * Map.TILE_SIZE;
@@ -92,9 +92,9 @@ class Player extends Element {
         this.x = Map.spawn[3][1] * Map.TILE_SIZE;
         this.y = Map.spawn[3][0] * Map.TILE_SIZE;
         break;
-      case 4: 
-      this.x = Map.spawn[4][1] * Map.TILE_SIZE;
-      this.y = Map.spawn[4][0] * Map.TILE_SIZE;
+      case 4:
+        this.x = Map.spawn[4][1] * Map.TILE_SIZE;
+        this.y = Map.spawn[4][0] * Map.TILE_SIZE;
         break;
     }
   }
@@ -105,11 +105,11 @@ class Player extends Element {
   reset() {
     this.life = this.maxLife;
     this.score = 0;
-    this.frag= 0;
-    this.death= 0;
-    this.direction= 4;
-    this.ready= false;
-    this.stamina= this.maxStamina;
+    this.frag = 0;
+    this.death = 0;
+    this.direction = 4;
+    this.ready = false;
+    this.stamina = this.maxStamina;
     this.ult = 0;
     this.room = null;
     if (this.alive) this.alive = true;
@@ -145,8 +145,12 @@ class Player extends Element {
    */
   updateMove() {
     this.updateSpeed();
-    if(this.room != undefined && global.Rooms[this.room].map && global.Rooms[this.room].state)
-    this.updatePosition(global.Rooms[this.room].map);
+    if (
+      this.room != undefined &&
+      global.Rooms[this.room].map &&
+      global.Rooms[this.room].state
+    )
+      this.updatePosition(global.Rooms[this.room].map);
     this.triggerObject();
 
     if (this.pressingX) {
@@ -165,14 +169,14 @@ class Player extends Element {
    */
   shoot() {
     var type = null;
-    (this.class === "archer") ? type = "arrow" : type = "fireball"
+    this.class === "archer" ? (type = "arrow") : (type = "fireball");
     var p = new Projectile({
       direction: this.direction,
       user: this.id,
       x: -Number.MAX_VALUE,
       y: -Number.MAX_VALUE,
       map: this.map,
-      type : type
+      type: type
     });
     p.x = this.x;
     p.y = this.y;
@@ -181,7 +185,7 @@ class Player extends Element {
         global.SOCKET_LIST[i].emit("shoot", {
           user: this.id,
           direction: this.direction,
-          type:type
+          type: type
         });
     }
   }
@@ -204,8 +208,7 @@ class Player extends Element {
             var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
             if (this.shield !== undefined && this.shield) {
               return;
-            }
-            else if (x + 1 === xPlayer && yPlayer === y) {
+            } else if (x + 1 === xPlayer && yPlayer === y) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -219,8 +222,7 @@ class Player extends Element {
 
             if (this.shield !== undefined && this.shield) {
               return;
-            }
-            else if (x - 1 === xPlayer && yPlayer === y) {
+            } else if (x - 1 === xPlayer && yPlayer === y) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -233,8 +235,7 @@ class Player extends Element {
 
             if (this.shield !== undefined && this.shield) {
               return;
-            }
-            else if (x === xPlayer && yPlayer === y - 1) {
+            } else if (x === xPlayer && yPlayer === y - 1) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -247,8 +248,7 @@ class Player extends Element {
 
             if (this.shield !== undefined && this.shield) {
               return;
-            }
-            else if (x === xPlayer && yPlayer === y + 1) {
+            } else if (x === xPlayer && yPlayer === y + 1) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -267,10 +267,13 @@ class Player extends Element {
             Player.list[i].x = Math.random() * Map.WIDTH;
             Player.list[i].y = Math.random() * Map.HEIGHT;
             while (
-              Player.list[i].wallDetection({
-                x: Player.list[i].x,
-                y: Player.list[i].y
-              }, global.Rooms[this.room].map)
+              Player.list[i].wallDetection(
+                {
+                  x: Player.list[i].x,
+                  y: Player.list[i].y
+                },
+                global.Rooms[this.room].map
+              )
             ) {
               Player.list[i].x = Math.random() * Map.WIDTH;
               Player.list[i].y = Math.random() * Map.HEIGHT;
@@ -280,41 +283,45 @@ class Player extends Element {
       }
     } else if (this.room && global.Rooms[this.room].mode === "survival") {
       for (var i in Enemy.list) {
-        if (
-          Enemy.list[i].room === this.room
-        ) {
+        if (Enemy.list[i].room === this.room) {
           if (this.direction === 1) {
-          
             var x = Math.floor(this.x / Map.TILE_SIZE);
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
             var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
-            if (x + 1 === xEnemy && (y - 1 === yEnemy || y === yEnemy || y + 1 === yEnemy)) {
+            if (
+              x + 1 === xEnemy &&
+              (y - 1 === yEnemy || y === yEnemy || y + 1 === yEnemy)
+            ) {
               Enemy.list[i].life -= this.atk;
               this.ult += 1;
             }
           }
           // right
           else if (this.direction === 2) {
-           
             var x = Math.floor(this.x / Map.TILE_SIZE);
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
             var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
 
-            if (x - 1 === xEnemy && (y - 1 === yEnemy || y === yEnemy || y + 1 === yEnemy)) {
+            if (
+              x - 1 === xEnemy &&
+              (y - 1 === yEnemy || y === yEnemy || y + 1 === yEnemy)
+            ) {
               Enemy.list[i].life -= this.atk;
               this.ult += 1;
             }
             // left
           } else if (this.direction === 3) {
-          
             var x = Math.floor(this.x / Map.TILE_SIZE);
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
             var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
 
-            if (y - 1 === yEnemy && (x - 1 === xEnemy || x === xEnemy || x + 1 === xEnemy)) {
+            if (
+              y - 1 === yEnemy &&
+              (x - 1 === xEnemy || x === xEnemy || x + 1 === xEnemy)
+            ) {
               Enemy.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -325,7 +332,10 @@ class Player extends Element {
             var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
             var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
 
-            if (y + 1 === yEnemy && (x - 1 === xEnemy || x === xEnemy || x + 1 === xEnemy)) {
+            if (
+              y + 1 === yEnemy &&
+              (x - 1 === xEnemy || x === xEnemy || x + 1 === xEnemy)
+            ) {
               Enemy.list[i].life -= this.atk;
               this.ult += 1;
             }
@@ -336,7 +346,7 @@ class Player extends Element {
               this.score += 2;
               this.ult += 5;
             }
-  
+
             global.REMOVE_DATA.enemy.push(Enemy.list[i].id);
             delete Enemy.list[i];
           }
@@ -364,7 +374,8 @@ class Player extends Element {
     } else if (this.class === "warrior" || this.class === "tank") {
       this.slash();
     }
-    if (global.Rooms[this.room] !== undefined &&
+    if (
+      global.Rooms[this.room] !== undefined &&
       global.Rooms[this.room].maxFrag &&
       this.frag >= global.Rooms[this.room].maxFrag
     ) {
@@ -378,7 +389,7 @@ class Player extends Element {
     }
   }
 
-    /**
+  /**
    * Call the right type of skill
    */
   skill() {
@@ -387,7 +398,7 @@ class Player extends Element {
     if (this.stamina <= 0) this.stamina = 0;
     switch (this.class) {
       case "warrior":
-        if(this.room && global.Rooms[this.room].mode === "ffa") {
+        if (this.room && global.Rooms[this.room].mode === "ffa") {
           for (var i in Player.list) {
             if (
               Player.list[i].room === this.room &&
@@ -397,26 +408,49 @@ class Player extends Element {
               var y = Math.floor(this.y / Map.TILE_SIZE);
               var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
               var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
-  
+
               if (this.direction === 1) {
                 if (this.shield !== undefined && this.shield) {
                   return;
-                }
-                else if (y = yPlayer && (x + 1 === xPlayer || x + 2 === xPlayer || x + 3 === xPlayer)) {
+                } else if (
+                  (y =
+                    yPlayer &&
+                    (x + 1 === xPlayer ||
+                      x + 2 === xPlayer ||
+                      x + 3 === xPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 2) {
-                if (y = yPlayer && (x - 1 === xPlayer || x - 2 === xPlayer || x - 3 === xPlayer)) {
+                if (
+                  (y =
+                    yPlayer &&
+                    (x - 1 === xPlayer ||
+                      x - 2 === xPlayer ||
+                      x - 3 === xPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 3) {
-                if (x = xPlayer && (y - 1 === yPlayer || y - 2 === yPlayer || y - 3 === yPlayer)) {
+                if (
+                  (x =
+                    xPlayer &&
+                    (y - 1 === yPlayer ||
+                      y - 2 === yPlayer ||
+                      y - 3 === yPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 } else {
-                  if (x = xPlayer && (y + 1 === yPlayer || y + 2 === yPlayer || y + 3 === yPlayer)) {
+                  if (
+                    (x =
+                      xPlayer &&
+                      (y + 1 === yPlayer ||
+                        y + 2 === yPlayer ||
+                        y + 3 === yPlayer))
+                  ) {
                     Player.list[i].life -= this.atk * 2;
                     this.ult += 3;
                   }
@@ -430,16 +464,20 @@ class Player extends Element {
                   this.score += 5;
                   this.ult += 5;
                 }
-                if (Player.list[this.id].ult > Player.list[this.id].maxUlt) Player.list[this.id].ult = Player.list[this.id].maxUlt;
-    
+                if (Player.list[this.id].ult > Player.list[this.id].maxUlt)
+                  Player.list[this.id].ult = Player.list[this.id].maxUlt;
+
                 Player.list[i].life = Player.list[i].maxLife;
                 Player.list[i].x = Math.random() * Map.WIDTH;
                 Player.list[i].y = Math.random() * Map.HEIGHT;
                 while (
-                  Player.list[i].wallDetection({
-                    x: Player.list[i].x,
-                    y: Player.list[i].y
-                  }, global.Rooms[this.room].map)
+                  Player.list[i].wallDetection(
+                    {
+                      x: Player.list[i].x,
+                      y: Player.list[i].y
+                    },
+                    global.Rooms[this.room].map
+                  )
                 ) {
                   Player.list[i].x = Math.random() * Map.WIDTH;
                   Player.list[i].y = Math.random() * Map.HEIGHT;
@@ -457,23 +495,41 @@ class Player extends Element {
               var y = Math.floor(this.y / Map.TILE_SIZE);
               var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
               var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
-  
+
               if (this.direction === 1) {
-                if (y = yEnemy && (x + 1 === xEnemy || x + 2 === xEnemy || x + 3 === xEnemy)) {
+                if (
+                  (y =
+                    yEnemy &&
+                    (x + 1 === xEnemy || x + 2 === xEnemy || x + 3 === xEnemy))
+                ) {
                   Enemy.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 2) {
-                if (y = yEnemy && (x - 1 === xEnemy || x - 2 === xEnemy || x - 3 === xEnemy)) {
-                  Enemy.list[i].life -= this.atk *  2;
+                if (
+                  (y =
+                    yEnemy &&
+                    (x - 1 === xEnemy || x - 2 === xEnemy || x - 3 === xEnemy))
+                ) {
+                  Enemy.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 3) {
-                if (x = xEnemy && (y - 1 === yEnemy || y - 2 === yEnemy || y - 3 === yEnemy)) {
+                if (
+                  (x =
+                    xEnemy &&
+                    (y - 1 === yEnemy || y - 2 === yEnemy || y - 3 === yEnemy))
+                ) {
                   Enemy.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 } else {
-                  if (x = xEnemy && (y + 1 === yEnemy || y + 2 === yEnemy || y + 3 === yEnemy)) {
+                  if (
+                    (x =
+                      xEnemy &&
+                      (y + 1 === yEnemy ||
+                        y + 2 === yEnemy ||
+                        y + 3 === yEnemy))
+                  ) {
                     Enemy.list[i].life -= this.atk * 2;
                     this.ult += 3;
                   }
@@ -492,7 +548,7 @@ class Player extends Element {
           }
         }
         break;
-      case "sorcerer" :
+      case "sorcerer":
         this.ult += 5;
         if (this.ult > this.maxUlt) this.ult = this.maxUlt;
         var lastSpeed = this.speedMove;
@@ -505,7 +561,7 @@ class Player extends Element {
         }, 6000);
         break;
       case "tank":
-        if(this.room && global.Rooms[this.room].mode === "ffa") {
+        if (this.room && global.Rooms[this.room].mode === "ffa") {
           for (var i in Player.list) {
             if (
               Player.list[i].room === this.room &&
@@ -515,29 +571,52 @@ class Player extends Element {
               var y = Math.floor(this.y / Map.TILE_SIZE);
               var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
               var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
-  
+
               if (this.direction === 1) {
                 if (this.shield !== undefined && this.shield) {
                   return;
-                }
-                else if (y = yPlayer && (x + 1 === xPlayer || x + 2 === xPlayer || x + 3 === xPlayer)) {
+                } else if (
+                  (y =
+                    yPlayer &&
+                    (x + 1 === xPlayer ||
+                      x + 2 === xPlayer ||
+                      x + 3 === xPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 2) {
-                if (y = yPlayer && (x - 1 === xPlayer || x - 2 === xPlayer || x - 3 === xPlayer)) {
+                if (
+                  (y =
+                    yPlayer &&
+                    (x - 1 === xPlayer ||
+                      x - 2 === xPlayer ||
+                      x - 3 === xPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 3) {
-                if (x = xPlayer && (y - 1 === yPlayer || y - 2 === yPlayer || y - 3 === yPlayer)) {
+                if (
+                  (x =
+                    xPlayer &&
+                    (y - 1 === yPlayer ||
+                      y - 2 === yPlayer ||
+                      y - 3 === yPlayer))
+                ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 } else {
-                  if (x = xPlayer && (y + 1 === yPlayer || y + 2 === yPlayer || y + 3 === yPlayer)) {
+                  if (
+                    (x =
+                      xPlayer &&
+                      (y + 1 === yPlayer ||
+                        y + 2 === yPlayer ||
+                        y + 3 === yPlayer))
+                  ) {
                     Player.list[i].life -= this.atk * 2;
                     this.life += this.atk * 2;
                     this.ult += 3;
@@ -553,16 +632,20 @@ class Player extends Element {
                   this.ult += 5;
                   this.life += this.atk * 2.5;
                 }
-                if (Player.list[this.id].ult > Player.list[this.id].maxUlt) Player.list[this.id].ult = Player.list[this.id].maxUlt;
-    
+                if (Player.list[this.id].ult > Player.list[this.id].maxUlt)
+                  Player.list[this.id].ult = Player.list[this.id].maxUlt;
+
                 Player.list[i].life = Player.list[i].maxLife;
                 Player.list[i].x = Math.random() * Map.WIDTH;
                 Player.list[i].y = Math.random() * Map.HEIGHT;
                 while (
-                  Player.list[i].wallDetection({
-                    x: Player.list[i].x,
-                    y: Player.list[i].y
-                  }, global.Rooms[this.room].map)
+                  Player.list[i].wallDetection(
+                    {
+                      x: Player.list[i].x,
+                      y: Player.list[i].y
+                    },
+                    global.Rooms[this.room].map
+                  )
                 ) {
                   Player.list[i].x = Math.random() * Map.WIDTH;
                   Player.list[i].y = Math.random() * Map.HEIGHT;
@@ -580,26 +663,44 @@ class Player extends Element {
               var y = Math.floor(this.y / Map.TILE_SIZE);
               var xEnemy = Math.floor(Enemy.list[i].x / Map.TILE_SIZE);
               var yEnemy = Math.floor(Enemy.list[i].y / Map.TILE_SIZE);
-  
+
               if (this.direction === 1) {
-                if (y = yEnemy && (x + 1 === xEnemy || x + 2 === xEnemy || x + 3 === xEnemy)) {
+                if (
+                  (y =
+                    yEnemy &&
+                    (x + 1 === xEnemy || x + 2 === xEnemy || x + 3 === xEnemy))
+                ) {
                   Enemy.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 2) {
-                if (y = yEnemy && (x - 1 === xEnemy || x - 2 === xEnemy || x - 3 === xEnemy)) {
-                  Enemy.list[i].life -= this.atk *  2;
+                if (
+                  (y =
+                    yEnemy &&
+                    (x - 1 === xEnemy || x - 2 === xEnemy || x - 3 === xEnemy))
+                ) {
+                  Enemy.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 3) {
-                if (x = xEnemy && (y - 1 === yEnemy || y - 2 === yEnemy || y - 3 === yEnemy)) {
+                if (
+                  (x =
+                    xEnemy &&
+                    (y - 1 === yEnemy || y - 2 === yEnemy || y - 3 === yEnemy))
+                ) {
                   Enemy.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 } else {
-                  if (x = xEnemy && (y + 1 === yEnemy || y + 2 === yEnemy || y + 3 === yEnemy)) {
+                  if (
+                    (x =
+                      xEnemy &&
+                      (y + 1 === yEnemy ||
+                        y + 2 === yEnemy ||
+                        y + 3 === yEnemy))
+                  ) {
                     Enemy.list[i].life -= this.atk * 2;
                     this.life += this.atk * 2;
                     this.ult += 3;
@@ -636,7 +737,7 @@ class Player extends Element {
         global.SOCKET_LIST[i].emit("skill", {
           user: this.id,
           direction: this.direction,
-          class : this.class
+          class: this.class
         });
     }
     if (
@@ -653,7 +754,6 @@ class Player extends Element {
     }
   }
 
-
   /**
    * Call the right type of ultimate
    */
@@ -664,71 +764,70 @@ class Player extends Element {
       case "warrior":
         var lastSpeed = this.speedMove;
         var lastAtk = this.atk;
-        this.life -= this.life * (10/100)
+        this.life -= this.life * (10 / 100);
         this.atk *= 3;
         this.speedMove *= 1.5;
-        this.stamina += this.stamina * (80/100);
+        this.stamina += this.stamina * (80 / 100);
         setTimeout(() => {
           this.atk = lastAtk;
           this.speedMove = lastSpeed;
         }, 15000);
         break;
-      case "sorcerer" :
+      case "sorcerer":
         var dist = null;
         var closest = Number.MAX_VALUE;
         var index = null;
         this.life += this.atk * 2.5;
-        if (this.life > this.maxLife) this.life = this.maxLife
-          if (this.room && global.Rooms[this.room].mode === "ffa") {
-            for (var i in Player.list){
-              var player = Player.list[i];
-              dist = this.evaluateDistance(player);
-              if (dist < closest) {
-                closest = dist;
-                index = i;
-              }
+        if (this.life > this.maxLife) this.life = this.maxLife;
+        if (this.room && global.Rooms[this.room].mode === "ffa") {
+          for (var i in Player.list) {
+            var player = Player.list[i];
+            dist = this.evaluateDistance(player);
+            if (dist < closest) {
+              closest = dist;
+              index = i;
             }
-            if (this.shield !== undefined && this.shield) {
-              return;
+          }
+          if (this.shield !== undefined && this.shield) {
+            return;
+          } else if (closest < 200) {
+            Player.list[index].life -= this.atk * 8;
+            for (var i in global.SOCKET_LIST) {
+              if (global.clientRooms[i] === global.clientRooms[this.id])
+                global.SOCKET_LIST[i].emit("ultimate", {
+                  user: this.id,
+                  class: this.class,
+                  target: index
+                });
             }
-            else if (closest < 200) {
-                Player.list[index].life -= this.atk * 8;
-                for (var i in global.SOCKET_LIST) {
-                  if (global.clientRooms[i] === global.clientRooms[this.id])
-                    global.SOCKET_LIST[i].emit("ultimate", {
-                      user: this.id,
-                      class: this.class, 
-                      target : index,
-                    });
-                }
-              } else {
-                this.ult = this.maxUlt/2.
-                return;
-              }
-          } else if (this.room && global.Rooms[this.room].mode === "survival"){
-            for (var i in Enemy.list){
-              var enemy = Enemy.list[i];
-              dist = this.evaluateDistance(enemy);
-              if (dist < closest) {
-                closest = dist;
-                index = i;
-              }
+          } else {
+            this.ult = this.maxUlt / 2;
+            return;
+          }
+        } else if (this.room && global.Rooms[this.room].mode === "survival") {
+          for (var i in Enemy.list) {
+            var enemy = Enemy.list[i];
+            dist = this.evaluateDistance(enemy);
+            if (dist < closest) {
+              closest = dist;
+              index = i;
             }
-              if (closest < 200) {
-                Enemy.list[index].life -= this.atk * 8;
-                for (var i in global.SOCKET_LIST) {
-                  if (global.clientRooms[i] === global.clientRooms[this.id])
-                    global.SOCKET_LIST[i].emit("ultimate", {
-                      user: this.id,
-                      class: this.class, 
-                      target : index,
-                    });
-                }
-              } else {
-                this.ult = this.maxUlt/2.
-                return;
-              }
+          }
+          if (closest < 200) {
+            Enemy.list[index].life -= this.atk * 8;
+            for (var i in global.SOCKET_LIST) {
+              if (global.clientRooms[i] === global.clientRooms[this.id])
+                global.SOCKET_LIST[i].emit("ultimate", {
+                  user: this.id,
+                  class: this.class,
+                  target: index
+                });
             }
+          } else {
+            this.ult = this.maxUlt / 2;
+            return;
+          }
+        }
         break;
       case "tank": // heal zone =-> peut etre convertir en shield
         this.shield = true;
@@ -749,7 +848,7 @@ class Player extends Element {
         break;
       case "archer":
         this.ultArrow = true;
-        this.shoot()
+        this.shoot();
         break;
     }
     if (
@@ -764,9 +863,8 @@ class Player extends Element {
           });
       }
     }
-   
   }
-    /**
+  /**
    * Trigger the object if the player walks on it
    */
   triggerObject() {
@@ -775,28 +873,32 @@ class Player extends Element {
     for (var i in Item.list) {
       xObject = Math.floor(Item.list[i].x / Map.TILE_SIZE);
       yObject = Math.floor(Item.list[i].y / Map.TILE_SIZE);
-  
-      if (Math.floor(this.x / Map.TILE_SIZE) === xObject && Math.floor((this.y + 15) / Map.TILE_SIZE) === yObject && Item.list[i].room === this.room) {
+
+      if (
+        Math.floor(this.x / Map.TILE_SIZE) === xObject &&
+        Math.floor((this.y + 15) / Map.TILE_SIZE) === yObject &&
+        Item.list[i].room === this.room
+      ) {
         Item.list[i].toRemove = true;
         if (Item.list[i].property === "heal" && this.life > 0) {
           this.life += 15;
           if (this.life > this.maxLife) {
             this.life = this.maxLife;
           }
-        } else if (Item.list[i].property === "stamina"){
+        } else if (Item.list[i].property === "stamina") {
           this.stamina += 10;
           if (this.stamina > this.maxStamina) {
             this.stamina = this.maxStamina;
-        }
-      } else {
-        this.ult += 10;
+          }
+        } else {
+          this.ult += 10;
           if (this.ult > this.maxUlt) {
             this.ult = this.maxUlt;
+          }
         }
       }
     }
   }
-}
 
   /**
    * Initialize a list with the player parameters and return it.
@@ -820,7 +922,7 @@ class Player extends Element {
       stamina: this.stamina,
       maxStamina: this.maxStamina,
       ult: this.ult,
-      maxUlt:this.maxUlt
+      maxUlt: this.maxUlt
     };
   }
 }
@@ -845,7 +947,10 @@ Player.infoPlayers = function() {
  * @param {socket} socket - Socket with the player's ID.
  */
 Player.onConnect = function(socket) {
-  var player = new Player({ id: socket.id, spawn:Math.floor(Math.random() * 4 + 1) });
+  var player = new Player({
+    id: socket.id,
+    spawn: Math.floor(Math.random() * 4 + 1)
+  });
   socket.on("keyPress", function(data) {
     if (data.inputId === "left") player.pressingLeft = data.state;
     else if (data.inputId === "right") player.pressingRight = data.state;
@@ -877,7 +982,8 @@ Player.onDisconnect = function(socket) {
   delete Player.list[socket.id];
   global.REMOVE_DATA.player.push(socket.id);
   socket.leave(global.clientRooms[socket.id]);
-  if (global.clientRooms[socket.id] !== undefined )delete global.clientRooms[socket.id];
+  if (global.clientRooms[socket.id] !== undefined)
+    delete global.clientRooms[socket.id];
 };
 
 /**
@@ -902,7 +1008,7 @@ Player.checkInfoPlayers = function() {
       direction: player.direction,
       ready: player.ready,
       stamina: player.stamina,
-      ult: player.ult,
+      ult: player.ult
     });
   }
   return info;
@@ -925,9 +1031,11 @@ class Enemy extends Element {
     this.direction = 4; // 1 right, 2 left, 3 up, 4 down
     this.room = config.room;
     this.atk = config.atk;
-    while (this.wallDetection({x:this.x, y:this.y}, global.Rooms[this.room].map)) {
-      this.x = Math.random () * Map.WIDTH;
-      this.y = Math.random () * Map.HEIGHT;
+    while (
+      this.wallDetection({ x: this.x, y: this.y }, global.Rooms[this.room].map)
+    ) {
+      this.x = Math.random() * Map.WIDTH;
+      this.y = Math.random() * Map.HEIGHT;
     }
     Enemy.list[this.id] = this;
     global.INIT_DATA.enemy.push({
@@ -957,19 +1065,33 @@ class Enemy extends Element {
     if (Object.keys(Player.list).length) {
       // looking for the closest player
       for (var i in Player.list) {
-        if (this.room === Player.list[i].room && Player.list[i].alive !== undefined && Player.list[i].alive) {
+        if (
+          this.room === Player.list[i].room &&
+          Player.list[i].alive !== undefined &&
+          Player.list[i].alive
+        ) {
           var player = Player.list[i];
-        tmpDistance = this.evaluateDistance(player);
-        if (tmpDistance < closest) {
-          closest = tmpDistance;
-          playerIndex = i;
-        }
+          tmpDistance = this.evaluateDistance(player);
+          if (tmpDistance < closest) {
+            closest = tmpDistance;
+            playerIndex = i;
+          }
         }
       }
+      if (playerIndex !== null) {
         var aStar = require("javascript-astar");
         var graph = new aStar.Graph(Map.array2D[map], { diagonal: false });
+        var startX = null;
+        var startY = null;
+        if (this.x < Player.list[playerIndex].x) startX = this.x + 16;
+        else startX = this.x - 16;
+
+        if (this.y < Player.list[playerIndex].y) startY = this.y + 16;
+        else startY = this.y - 16;
         var start =
-          graph.grid[Math.floor(this.y / Map.TILE_SIZE)][Math.floor(this.x / Map.TILE_SIZE)];
+          graph.grid[Math.floor((startY) / Map.TILE_SIZE)][
+            Math.floor((startX) / Map.TILE_SIZE)
+          ];
         var end =
           graph.grid[Math.floor(Player.list[playerIndex].y / Map.TILE_SIZE)][
             Math.floor(Player.list[playerIndex].x / Map.TILE_SIZE)
@@ -978,47 +1100,47 @@ class Enemy extends Element {
         // y is x in our matrix
         var nextMove = result[1];
         if (nextMove) {
-        diffX = nextMove.x - start.x;
-        diffY = nextMove.y - start.y;    
-  
-        if (diffX > 0) {
+          diffX = nextMove.x - start.x;
+          diffY = nextMove.y - start.y;
+
+          if (diffX > 0) {
             this.y += this.speedMove;
             this.direction = 4;
-        } else if (diffX < 0) {
+          } else if (diffX < 0) {
             this.y -= this.speedMove;
             this.direction = 3;
-        }
-        if (diffY > 0) {
+          }
+          if (diffY > 0) {
             this.x += this.speedMove;
             this.direction = 1;
-        } else if (diffY < 0) { 
+          } else if (diffY < 0) {
             this.x -= this.speedMove;
             this.direction = 2;
+          }
+        } else if (closest < 80) {
+          diffX = Math.floor(Player.list[playerIndex].x - this.x);
+          diffY = Math.floor(Player.list[playerIndex].y - this.y);
+          if (diffX === 0) {
+            if (diffY > 0) {
+              this.direction = 4;
+            } else if (diffY < 0) {
+              this.direction = 3;
+            }
+          } else if (diffY === 0) {
+            if (diffX > 0) {
+              this.direction = 1;
+            } else if (diffX < 0) {
+              this.direction = 2;
+            }
+          } else {
+            if (diffX > 0) {
+              this.direction = 1;
+            } else if (diffX < 0) {
+              this.direction = 2;
+            }
+          }
+          this.attack(playerIndex);
         }
-      }
-      else if (closest < 100) {
-        diffX = Math.floor(Player.list[playerIndex].x - this.x);
-        diffY = Math.floor(Player.list[playerIndex].y - this.y); 
-        if (diffX === 0) {
-          if (diffY > 0) {
-            this.direction = 4;
-          } else if (diffY < 0) {
-            this.direction = 3;
-          }
-        }else if (diffY === 0){
-          if(diffX > 0) {
-            this.direction = 1;
-          } else if (diffX < 0) { 
-            this.direction = 2;
-          }
-        } else {
-          if(diffX > 0) {
-            this.direction = 1;
-          } else if (diffX < 0) { 
-            this.direction = 2;
-          }
-        }
-        this.attack(playerIndex);
       }
     }
   }
@@ -1026,27 +1148,35 @@ class Enemy extends Element {
   attack(target) {
     if (this.shield !== undefined && this.shield) {
       return;
-    }
-    else {
-    Player.list[target].life -= this.atk;
+    } else {
+      Player.list[target].life -= this.atk;
     }
     if (Player.list[target].life <= 0) {
       var checkContinue = false;
       global.REMOVE_DATA.player.push(target);
       if (Player.list[target].alive) Player.list[target].alive = false;
       for (var i in Player.list) {
-        if (Player.list[i].alive && Player.list[i].room === Player.list[target].room) { checkContinue = true;break; }
+        if (
+          Player.list[i].alive &&
+          Player.list[i].room === Player.list[target].room
+        ) {
+          checkContinue = true;
+          break;
+        }
       }
     }
-      if (checkContinue !== undefined && !checkContinue) {
-        for (var i in global.SOCKET_LIST) {
-          global.SOCKET_LIST[i].emit("gameOver", {
-            room: this.room
-          });
-        }
+    if (checkContinue !== undefined && !checkContinue) {
+      for (var i in global.SOCKET_LIST) {
+        global.SOCKET_LIST[i].emit("gameOver", {
+          room: this.room
+        });
+      }
     } else {
       for (var i in global.SOCKET_LIST) {
-        global.SOCKET_LIST[i].emit ("EnemyAttack", {id :this.id, direction:this.direction})
+        global.SOCKET_LIST[i].emit("EnemyAttack", {
+          id: this.id,
+          direction: this.direction
+        });
       }
     }
   }
@@ -1079,7 +1209,7 @@ Enemy.randomGenerateEnemy = function(roomName) {
   var id = Math.random();
   var speedMove = 1 + global.Rooms[roomName].wave * 0.2;
   var atk = 2 + global.Rooms[roomName].wave * 0.5;
-  new Enemy({ id: id, x: x, y: y, speed: speedMove, room:roomName, atk:atk });
+  new Enemy({ id: id, x: x, y: y, speed: speedMove, room: roomName, atk: atk });
 };
 /** static elements for Enemy */
 Enemy.list = {};
@@ -1130,25 +1260,25 @@ class Projectile extends Element {
     this.id = Math.random();
     switch (config.direction) {
       case 1:
-        this.speedX = 8;
+        this.speedX = 4;
         this.speedY = 0;
         break;
       case 2:
-        this.speedX = -8;
+        this.speedX = -4;
         this.speedY = 0;
         break;
       case 3:
         this.speedX = 0;
-        this.speedY = -8;
+        this.speedY = -4;
         break;
       case 4:
         this.speedX = 0;
-        this.speedY = 8;
+        this.speedY = 4;
         break;
       default:
         break;
     }
-    this.direction = config.direction
+    this.direction = config.direction;
     this.type = config.type;
     this.user = config.user; // the shooter
     this.timer = 0;
@@ -1168,8 +1298,8 @@ class Projectile extends Element {
       x: this.x,
       y: this.y,
       room: this.room,
-      type : this.type,
-      direction : this.direction
+      type: this.type,
+      direction: this.direction
     });
   }
 
@@ -1190,15 +1320,20 @@ class Projectile extends Element {
         ) {
           if (this.shield !== undefined && this.shield) {
             return;
-          }
-          else if (this.ultArrow === true && this.direction === object.direction) {
+          } else if (
+            this.ultArrow === true &&
+            this.direction === object.direction
+          ) {
             object.life = 0;
             this.ultArrow = false;
-          } else if (this.ultArrow === true && this.direction !== object.direction) {
+          } else if (
+            this.ultArrow === true &&
+            this.direction !== object.direction
+          ) {
             object.life -= this.atk * 5;
             this.ultArrow = false;
           } else {
-            object.life -=  Player.list[this.user].atk;
+            object.life -= Player.list[this.user].atk;
             Player.list[this.user].ult += 1;
           }
           // respawn
@@ -1212,30 +1347,43 @@ class Projectile extends Element {
             object.life = object.maxLife;
             object.x = Math.random() * Map.WIDTH;
             object.y = Math.random() * Map.HEIGHT;
-            while (this.wallDetection({ x: object.x, y: object.y }, global.Rooms[object.room].map)) {
+            while (
+              this.wallDetection(
+                { x: object.x, y: object.y },
+                global.Rooms[object.room].map
+              )
+            ) {
               object.x = Math.random() * Map.WIDTH;
               object.y = Math.random() * Map.HEIGHT;
             }
           }
-          if ( Player.list[this.user].ult >  Player.list[this.user].maxUlt)  Player.list[this.user].ult =  Player.list[this.user].maxUlt;
+          if (Player.list[this.user].ult > Player.list[this.user].maxUlt)
+            Player.list[this.user].ult = Player.list[this.user].maxUlt;
           this.toRemove = true;
         }
       }
     } else if (global.Rooms[this.room].mode === "survival") {
       for (var i in Enemy.list) {
         var object = Enemy.list[i];
-        if (this.testHit(object) && this.user !== object.id && this.room === object.room) {
+        if (
+          this.testHit(object) &&
+          this.user !== object.id &&
+          this.room === object.room
+        ) {
           if (this.ultArrow === true && this.direction === object.direction) {
             object.life = 0;
             this.ultArrow = false;
-          } else if (this.ultArrow === true && this.direction !== object.direction) {
+          } else if (
+            this.ultArrow === true &&
+            this.direction !== object.direction
+          ) {
             object.life -= this.atk * 5;
             this.ultArrow = false;
           } else {
-            object.life -=  Player.list[this.user].atk;
+            object.life -= Player.list[this.user].atk;
             Player.list[this.user].ult += 1;
           }
-  
+
           if (object.life <= 0) {
             if (Player.list[this.user]) {
               Player.list[this.user].score += 2;
@@ -1244,7 +1392,8 @@ class Projectile extends Element {
             global.REMOVE_DATA.enemy.push(object.id);
             delete Enemy.list[i];
           }
-          if (Player.list[this.user].ult > Player.list[this.user].maxUlt)  Player.list[this.user].ult = Player.list[this.user].maxUlt;
+          if (Player.list[this.user].ult > Player.list[this.user].maxUlt)
+            Player.list[this.user].ult = Player.list[this.user].maxUlt;
           this.toRemove = true;
         }
       }
@@ -1252,8 +1401,6 @@ class Projectile extends Element {
         this.toRemove = true;
       }
     }
-    
-    
   }
 
   /**
@@ -1261,7 +1408,7 @@ class Projectile extends Element {
    * @param {Object} object - represent an enemy or a player
    * @returns {boolean} true if it touch, false otherwise
    */
-  testHit(object) {    
+  testHit(object) {
     var right_hitbox = { x: this.x + 15, y: this.y };
     var left_hitbox = { x: this.x - 15, y: this.y };
     var up_hitbox = { x: this.x, y: this.y - 5 };
@@ -1270,11 +1417,16 @@ class Projectile extends Element {
     var left_hitboxO = { x: object.x - 15, y: object.y };
     var up_hitboxO = { x: object.x, y: object.y - 5 };
     var down_hitboxO = { x: object.x, y: object.y + 30 };
-  if (this.hit(right_hitbox, right_hitboxO) ||this.hit(left_hitbox, left_hitboxO) || this.hit(down_hitbox, up_hitboxO)||this.hit(up_hitbox, down_hitboxO)) {
-    return true;
+    if (
+      this.hit(right_hitbox, right_hitboxO) ||
+      this.hit(left_hitbox, left_hitboxO) ||
+      this.hit(down_hitbox, up_hitboxO) ||
+      this.hit(up_hitbox, down_hitboxO)
+    ) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
 
   /**
    *  Test if there is a collision with an object
@@ -1282,14 +1434,13 @@ class Projectile extends Element {
    *  @param {Point} point - object with position
    *  @param {Point} object - the entity the projectile is trying to touch
    */
-   hit(point, object) {
+  hit(point, object) {
     var x = Math.floor(point.x / Map.TILE_SIZE);
     var y = Math.floor(point.y / Map.TILE_SIZE);
     var xObject = Math.floor(object.x / Map.TILE_SIZE);
     var yObject = Math.floor(object.y / Map.TILE_SIZE);
-    
-    if (xObject === x && yObject === y) 
-    return true;
+
+    if (xObject === x && yObject === y) return true;
     return false;
   }
   /**
@@ -1301,9 +1452,9 @@ class Projectile extends Element {
       id: this.id,
       x: this.x,
       y: this.y,
-      room : this.room,
+      room: this.room,
       type: this.type,
-      direction : this.direction
+      direction: this.direction
     };
   }
 }
@@ -1349,30 +1500,32 @@ Projectile.infoProjectiles = function() {
  * @extends Element
  */
 class Item extends Element {
-   /**
+  /**
    * Create an object.
    * @param {list} config - list of parameters
    */
-    constructor(config) {
-      super(config);
-     
-      this.id = Math.random();
-      this.property = config.property;
-      this.toRemove = false;
-      this.room = config.room;
-      while (this.wallDetection({x:this.x, y:this.y},global.Rooms[this.room].map )) {
-        this.x = Math.random() * Map.WIDTH;
-        this.y = Math.random() * Map.HEIGHT;
-      }
-      Item.list[this.id] = this;
-      global.INIT_DATA.object.push({
-        property : this.property,
-        id: this.id,
-        x: this.x,
-        y: this.y,
-        room : this.room,
-      });
+  constructor(config) {
+    super(config);
+
+    this.id = Math.random();
+    this.property = config.property;
+    this.toRemove = false;
+    this.room = config.room;
+    while (
+      this.wallDetection({ x: this.x, y: this.y }, global.Rooms[this.room].map)
+    ) {
+      this.x = Math.random() * Map.WIDTH;
+      this.y = Math.random() * Map.HEIGHT;
     }
+    Item.list[this.id] = this;
+    global.INIT_DATA.object.push({
+      property: this.property,
+      id: this.id,
+      x: this.x,
+      y: this.y,
+      room: this.room
+    });
+  }
 }
 Item.list = {};
 
@@ -1380,7 +1533,7 @@ Item.list = {};
  * Generate an item
  * @return {String} roomName - name of the room where item is generated
  */
-Item.generateObject = function (roomName) {
+Item.generateObject = function(roomName) {
   var x = Math.random() * Map.WIDTH;
   var y = Math.random() * Map.HEIGHT;
   var choice = Math.floor(Math.random() * 3); // to randomly choose between a heal or a stamina boost
@@ -1388,19 +1541,19 @@ Item.generateObject = function (roomName) {
 
   if (choice === 1) {
     property = "heal";
-  } else if (choice === 2){
+  } else if (choice === 2) {
     property = "stamina";
   } else {
     property = "ult";
   }
-  new Item({ x: x, y: y, property : property, room:roomName });
-}
+  new Item({ x: x, y: y, property: property, room: roomName });
+};
 
 /**
  * Updating info about each object and send it.
  * @return {list} info about updated objects
  */
- Item.checkInfoObjects = function() {
+Item.checkInfoObjects = function() {
   var info = [];
   for (var i in Item.list) {
     var object = Item.list[i];
@@ -1412,7 +1565,7 @@ Item.generateObject = function (roomName) {
         id: object.id,
         x: object.x,
         y: object.y,
-        property : object.property
+        property: object.property
       });
     }
   }

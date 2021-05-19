@@ -14,10 +14,10 @@ function mainGame() {
   // map
   game.clearRect(0, 0, WIDTH, HEIGHT);
   game.drawImage(map, 0, 0);
-  if (
-    clientPlayer.list[playerId].score !== lastScore ||
+  if (clientPlayer.list[playerId] !== undefined &&
+    (clientPlayer.list[playerId].score !== lastScore ||
     clientPlayer.list[playerId].frag !== lastFrag ||
-    clientPlayer.list[playerId].death !== lastDeath
+    clientPlayer.list[playerId].death !== lastDeath)
   ) {
     left_game.clearRect(0, 0, left_game.canvas.width, left_game.canvas.height);
 
@@ -26,7 +26,7 @@ function mainGame() {
     lastDeath = clientPlayer.list[playerId].death;
     drawHud();
   }
-  if (clientPlayer.list[playerId].life !== lastLife || clientPlayer.list[playerId].stamina !== lastStamina || clientPlayer.list[playerId].ult !== lastUlt) {
+  if (clientPlayer.list[playerId] !== undefined && (clientPlayer.list[playerId].life !== lastLife || clientPlayer.list[playerId].stamina !== lastStamina || clientPlayer.list[playerId].ult !== lastUlt)) {
     right_game.clearRect(0, 0, right_game.canvas.width, right_game.canvas.height);
     lastLife = clientPlayer.list[playerId].life;
     lastStamina = clientPlayer.list[playerId].stamina;

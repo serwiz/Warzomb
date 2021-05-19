@@ -1,4 +1,3 @@
-
 /** events handler */
 
 /**
@@ -6,9 +5,19 @@
  *  @param {event} event - key pressed event
  */
 document.onkeydown = function(event) {
-  if (!playerId) return; 
-  if(gameRoom && Option.list[gameRoom] !== undefined && !Option.list[gameRoom].start)return;
-  if (clientPlayer.list[playerId] !== undefined && (clientPlayer.list[playerId].inAction || clientPlayer.list[playerId].useSkill)) return;
+  if (!playerId) return;
+  if (
+    gameRoom &&
+    Option.list[gameRoom] !== undefined &&
+    !Option.list[gameRoom].start
+  )
+    return;
+  if (
+    clientPlayer.list[playerId] !== undefined &&
+    (clientPlayer.list[playerId].inAction ||
+      clientPlayer.list[playerId].useSkill)
+  )
+    return;
   if (typing) {
     return;
   }
@@ -80,11 +89,11 @@ document.onkeyup = function(event) {
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("chat-input").addEventListener("focus", function() {
     typing = true;
-    $(".chat-container").css("opacity", 1)
+    $(".chat-container").css("opacity", 1);
   });
   document.getElementById("chat-input").addEventListener("blur", function() {
     typing = false;
-    $(".chat-container").css("opacity", 0.3)
+    $(".chat-container").css("opacity", 0.3);
   });
 });
 
@@ -97,12 +106,15 @@ $("#ready").on("keydown", function(e) {
   }
 });
 
-
 /**
  * Change the state of the player
  */
 function getReady() {
-  if (Object.keys(clientPlayer.list).length === 1 && Option.list[gameRoom].mode === "ffa") {
+  var countPlayers = 0;
+  for (var i in clientPlayer.list) {
+    if (clientPlayer.list[i].room === gameRoom) countPlayers++;
+  }
+  if (countPlayers === 1 && Option.list[gameRoom].mode === "ffa") {
     return;
   }
   if (clientPlayer.list[playerId].ready) {
@@ -135,10 +147,12 @@ function surrender() {
       result: "lose",
       id: clientPlayer.list[playerId].id
     });
+
     gameRoom = null;
     clearInterval(pregame);
     clearInterval(timer);
     pregame = null;
+    timer = null;
     minutes = 0;
     seconds = 0;
     $("#timer").empty();
@@ -146,8 +160,10 @@ function surrender() {
 }
 
 function playAgain() {
-  $("#announcement").empty()
-    game.globalAlpha = 1;
+  $("#announcement").empty();
+  game.globalAlpha = 1;
+  minutes = 0;
+  seconds = 0;
   goToMenu();
 }
 function Quit() {
