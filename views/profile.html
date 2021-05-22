@@ -15,6 +15,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="classement.js"></script>
   </head>
   <body>
     <!--#include virtual="views/header.html" -->
@@ -48,16 +51,9 @@
       <div class="side">
         <h2>Actu</h2>
         <p>Derniers exploits du serveur :</p>
-        <p>
-          du blabla
-        </p>
-        <h3>Top Player</h3>
+        <h3><img height="30px" width="30px" src="../tileset/images/coupe.png"> Top Player </h3>
         <p>Ces joueurs ont tout donné:</p>
-        <div class="fakeimg" style="height:60px;">Image</div>
-        <br />
-        <div class="fakeimg" style="height:60px;">Image</div>
-        <br />
-        <div class="fakeimg" style="height:60px;">Image</div>
+        <div id="rank"> </div>
       </div>
       <div class="main">
         <div class="container">

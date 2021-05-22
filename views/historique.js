@@ -1,9 +1,18 @@
 /**
  * Retrieve parties and display them
  */
+
+var firebase = app_fireBase;
+var name = null;
+
 $(document).ready(function() {
+
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      name = user.displayName;
   $.ajax({
     url: "/parties",
+    data: { "user": name },
     method: "POST"
   })
     .done(function(data) {
@@ -52,4 +61,10 @@ $(document).ready(function() {
     .always(function() {
       console.log("Request done");
     });
+
+    } else {
+      console.log("no user detected");
+      window.location.replace("index.html");
+    }
+  });
 });

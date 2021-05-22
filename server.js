@@ -34,6 +34,7 @@ app.use("/credits.txt", (request, response) => {
 var admin = require("firebase-admin");
 const { config } = require("process");
 var serviceAccount = require("./serviceAccountKey.json");
+const { type } = require("os");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://aws-warzomb-default-rtdb.firebaseio.com/"
@@ -541,6 +542,7 @@ app.post("/start", function(req, res) {
 
 /* retrieve all  game parts */
 app.post("/parties", function(req, res) {
+  console.log(req.body["user"]);
   admin
     .database()
     .ref()
@@ -549,7 +551,18 @@ app.post("/parties", function(req, res) {
     .then(snapshot => {
       if (snapshot.exists()) {
         var data = snapshot.toJSON();
-        res.send(data);
+        var retour = [] ; 
+       
+      for (var i in data )
+        {
+          if (data[i]["joueur_id"] == req.body["user"] )
+          {
+            retour.push(data[i])
+          }
+
+        }
+       
+        res.send(retour);
       } else {
         console.log(" aucune donnees ! ");
         data = null;
@@ -561,6 +574,45 @@ app.post("/parties", function(req, res) {
       console.error(error);
     });
 });
+
+
+
+
+
+/* retrieve all  game parts */
+app.post("/classement", function (req, res) {
+  admin
+    .database()
+    .ref()
+    .child("parties")
+    .get()
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        var data = snapshot.toJSON();
+        retour = [{}]
+        var  cpt = 0 
+        for (var i in data)
+        {
+          if (cpt < 3){
+            retour.push(data[i])
+            cpt++ 
+          }
+        }
+        res.send(retour);
+      } else {
+        console.log(" aucune donnees ! ");
+        data = null;
+        var data = snapshot.toJSON();
+        res.send(data);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+
+
+
 
 /**
  * Increase the difficulty after an amount of time for a survival mode
