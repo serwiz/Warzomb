@@ -9,7 +9,7 @@
 
   "tank": {
     "class": "tank",
-    "maxLife": 225,
+    "maxLife": 250,
     "speedMove": 4,
     "maxStamina": 150,
     "atk": 6
@@ -17,7 +17,7 @@
 
   "warrior": {
     "class": "warrior",
-    "maxLife": 175,
+    "maxLife": 200,
     "speedMove": 4,
     "maxStamina": 150,
     "atk": 8

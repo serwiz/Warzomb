@@ -29,6 +29,16 @@ app.use("/tileset/images", express.static(__dirname + "/tileset/images"));
 app.use("/credits.txt", (request, response) => {
   response.sendFile(__dirname + "/credits.txt");
 });
+
+// error handler middleware
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).send({
+    error: {
+      status: error.status || 500,
+      message: error.message || "Internal Server Error"
+    }
+  });
+});
 ////////////////////////////////////////////////
 
 var admin = require("firebase-admin");
@@ -102,9 +112,17 @@ io.sockets.on("connection", function(socket) {
    */
   socket.on("getLobbies", function() {
     var info = {};
+    var countPlayers = 0;
     for (var i in global.Rooms) {
       if (io.sockets.adapter.rooms.get(i) === undefined) delete global.Rooms[i];
-      else if (!global.Rooms[i].state) {
+      for (var j in Entity.Player.list) {
+        if (global.clientRooms[i] === i) countPlayers++;
+      }
+      if (
+        global.Rooms[i] !== undefined &&
+        !global.Rooms[i].state &&
+        countPlayers < 4
+      ) {
         var param = {
           room: i + "'s room",
           mode: global.Rooms[i].mode,
@@ -112,6 +130,7 @@ io.sockets.on("connection", function(socket) {
           size: global.Rooms[i].numberPlayers + "/" + global.Rooms[i].capacity
         };
         info[i] = param;
+        countPlayers = 0;
       }
     }
     socket.emit("listLobbies", info);
@@ -136,13 +155,10 @@ io.sockets.on("connection", function(socket) {
       Entity.Player.list[socket.id].alive = true;
     }
     var playerInfo = Entity.Player.infoPlayers();
-    var projectileInfo = Entity.Projectile.infoProjectiles();
-    var enemyInfo = Entity.Enemy.infoEnemies();
+
     socket.emit("init", {
       Id: socket.id,
       player: playerInfo,
-      projectile: projectileInfo,
-      enemy: enemyInfo,
       id: socket.id,
       map: room.map,
       mode: room.mode,
@@ -193,6 +209,8 @@ io.sockets.on("connection", function(socket) {
         ) {
           check = true;
           break;
+        } else {
+          check = false;
         }
       }
     } while (check);
@@ -201,13 +219,10 @@ io.sockets.on("connection", function(socket) {
     }
 
     var playerInfo = Entity.Player.infoPlayers();
-    var projectileInfo = Entity.Projectile.infoProjectiles();
-    var enemyInfo = Entity.Enemy.infoEnemies();
+
     socket.emit("init", {
       Id: socket.id,
       player: playerInfo,
-      projectile: projectileInfo,
-      enemy: enemyInfo,
       id: socket.id,
       map: global.Rooms[room.name].map,
       room: room.name,
@@ -236,21 +251,19 @@ io.sockets.on("connection", function(socket) {
     if (!data.name.includes("Guest_"))
       partie(
         data["room"],
-        global.Rooms[data.room].beginning,
+        global.Rooms[data.room].beginning.toString(),
         data["datefin"],
         data["name"],
         data["score"],
         data["result"]
       );
-
+    if (global.Rooms[data.room] !== undefined)global.Rooms[data.room].numberPlayers -= 1;
     socket.leave(data.room);
     global.REMOVE_DATA.player.push(socket.id);
-    var countPlayers = 0;
-    for (var i in Entity.Player.list) {
-      if (Entity.Player.list[i].room === data.room) countPlayers += 1;
-    }
 
-    if (countPlayers === 2 && global.Rooms[data.room].mode === "ffa") {
+
+    // in ffa 2 players in game, if someone surrender then the other automatically win
+    if (global.Rooms[data.room] !== undefined && global.Rooms[data.room].numberPlayers < 2 && global.Rooms[data.room].mode === "ffa") {
       for (var i in Entity.Player.list) {
         if (Entity.Player.list[i].id !== socket.id) {
           var message = "Victory";
@@ -259,10 +272,25 @@ io.sockets.on("connection", function(socket) {
           global.SOCKET_LIST[i].leave(data.room);
           global.REMOVE_DATA.player.push(i);
         }
+        if (!data.name.includes("Guest_"))
+          partie(
+            data["room"],
+            global.Rooms[data.room].beginning.toString(),
+            data["datefin"],
+            Entity.Player.list[i].name,
+            Entity.Player.list[i].frag +
+              "/" +
+              Entity.Player.list[i].death +
+              "/" +
+              Entity.Player.list[i].score,
+            "win"
+          );
       }
     }
+
     // removing properties
     if (
+      global.Rooms[data.room] !== undefined &&
       global.Rooms[data.room].mode === "survival" &&
       io.sockets.adapter.rooms.get(data.room) === undefined
     ) {
@@ -275,8 +303,11 @@ io.sockets.on("connection", function(socket) {
       }
     }
     if (io.sockets.adapter.rooms.get(data.room) === undefined) {
-      clearInterval(global.Rooms[data.room].objectId);
-      clearInterval(global.Rooms[data.room].staminaId);
+      if (global.Rooms[data.room] !== undefined) {
+        clearInterval(global.Rooms[data.room].objectId);
+        clearInterval(global.Rooms[data.room].staminaId);
+      }
+
       for (var i in Entity.Item.list) {
         if (Entity.Item.list[i].room === data.room) {
           global.REMOVE_DATA.object.push(Entity.Item.list[i].id);
@@ -293,7 +324,12 @@ io.sockets.on("connection", function(socket) {
       // the winner
       message = "Victory";
     else if (data.result === "lose") message = "Lose";
-    else message = "Your score : " + Entity.Player.list[socket.id].score; // this is for survival
+    else {
+      var bonusFrag = Entity.Player.list[socket.id].frag * 5;
+      var bonusTimer = data.time * 50;
+      var score = bonusFrag + bonusTimer + Entity.Player.list[socket.id].score;
+      message = { time: bonusTimer, frag: bonusFrag, score: score }; // this is for survival
+    }
     socket.emit("closeGame", message);
     Entity.Player.list[socket.id].reset();
   });
@@ -519,7 +555,7 @@ app.post("/start", function(req, res) {
         Entity.Player.list[i].stamina += 1;
       }
     }
-  }, 2000);
+  }, 1500);
 
   if (global.Rooms[req.body.room].mode === "survival") {
     if (!global.Rooms[req.body.room].spawnActivation) {

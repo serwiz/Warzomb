@@ -84,7 +84,7 @@ document.onkeyup = function(event) {
 };
 
 /**
- * Change the state of the user : either the user is writing on the chat or the user is playing
+ * Changes the state of the user : either the user is writing on the chat or the user is playing
  */
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("chat-input").addEventListener("focus", function() {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Remove enter key functionnaity from the Ready button
+ * Removes enter key functionnaity from the Ready button
  */
 $("#ready").on("keydown", function(e) {
   if (e.keyCode == 13) {
@@ -107,7 +107,7 @@ $("#ready").on("keydown", function(e) {
 });
 
 /**
- * Change the state of the player
+ * Changes the state of the player
  */
 function getReady() {
   var countPlayers = 0;
@@ -129,8 +129,8 @@ function getReady() {
 }
 
 /**
- * Allow a player to surrender when clicking on the button surrender.
- * Ask a confirmation and if confirmed, the player lose the game and is redirected to the home page
+ * Allows a player to surrender when clicking on the button surrender.
+ * Asks a confirmation and if confirmed, the player lose the game and is redirected to the home page
  */
 function surrender() {
   if (confirm("Do you want to surrender?")) {
@@ -149,9 +149,7 @@ function surrender() {
     });
 
     gameRoom = null;
-    clearInterval(pregame);
     clearInterval(timer);
-    pregame = null;
     timer = null;
     minutes = 0;
     seconds = 0;
@@ -159,6 +157,9 @@ function surrender() {
   }
 }
 
+/**
+ * Redirects the player on the creation page
+ */
 function playAgain() {
   $("#announcement").empty();
   game.globalAlpha = 1;
@@ -166,7 +167,44 @@ function playAgain() {
   seconds = 0;
   goToMenu();
 }
+
+/**
+ * Redirects the player on index
+ */
 function Quit() {
   // return index
+  game.globalAlpha = 1;
+  minutes = 0;
+  seconds = 0;
   window.location.replace("index.html");
+}
+
+/**
+ * Stops the game when needed when something outside endGame or surrender happen, typically when a player has lost the connection
+ */
+function interruptGame() {
+  if (Option.list[gameRoom] !== undefined && Option.list[gameRoom].mode === "ffa" && Option.list[gameRoom].start) {
+    var countPlayers = 0;
+    for (var i in clientPlayer.list) {
+      if (clientPlayer.list[i].room === gameRoom) {
+        countPlayers += 1;
+      }
+    }
+    console.log (countPlayers)
+    if (countPlayers === 1) {
+      socket.emit("endGame", {
+        room: clientPlayer.list[playerId].room.toString(),
+        datefin: new Date().toString(),
+        name: clientPlayer.list[playerId].name,
+        score:
+          clientPlayer.list[playerId].frag.toString() +
+          "/" +
+          clientPlayer.list[playerId].death.toString() +
+          "/" +
+          clientPlayer.list[playerId].score.toString(),
+        result: "win",
+        id: clientPlayer.list[playerId].id
+      });
+    }
+  }
 }

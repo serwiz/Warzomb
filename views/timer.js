@@ -122,10 +122,3 @@ function startGame() {
     return;
   }
 }
-
-/**
- * Display EndScreen when the game is finished
- */
-function endGame() {
-  drawEndScreen();
-}

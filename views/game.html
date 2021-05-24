@@ -5,6 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="game.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="offline.css" media="screen" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="offline-language.css"
+      media="screen"
+    />
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
@@ -14,10 +21,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
   </head>
   <body>
     <!-- Javascript files -->
+    <script src="offline.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="fireBase.js"></script>
     <script src="init.js"></script>
@@ -98,18 +105,30 @@
         <span class="infotext">
           Description de la map et particularité ici.
         </span>
-        <input type="radio" id="map4" name="map" value="swamp" autocomplete="off" />
+        <input
+          type="radio"
+          id="map4"
+          name="map"
+          value="swamp"
+          autocomplete="off"
+        />
         <label for="map4">Swamp</label>
         <span class="infotext">
           Description de la map et particularité ici.
         </span>
-        <input type="radio" id="map5" name="map" value="desert" autocomplete="off" />
+        <input
+          type="radio"
+          id="map5"
+          name="map"
+          value="desert"
+          autocomplete="off"
+        />
         <label for="map5">Desert</label>
         <span class="infotext">
           Description de la map et particularité ici.
         </span>
       </section>
-      <section class="class_selection" name = "class_selection">
+      <section class="class_selection" name="class_selection">
         <p>
           Choose a class:
         </p>
@@ -299,32 +318,39 @@
       var left_canvas = document.getElementById("game_zone-ui-left");
       var right_canvas = document.getElementById("game_zone-ui-right");
       var game = canvas.getContext("2d");
-      var left_game =left_canvas.getContext("2d");
+      var left_game = left_canvas.getContext("2d");
       var right_game = right_canvas.getContext("2d");
 
       /**
        * Responsive canvas
        */
       var resize = function() {
-        var ratio = 16/9;
-        if (CANVAS_HEIGHT < CANVAS_WIDTH / ratio) CANVAS_WIDTH = CANVAS_HEIGHT * ratio;
+        var ratio = 16 / 9;
+        if (CANVAS_HEIGHT < CANVAS_WIDTH / ratio)
+          CANVAS_WIDTH = CANVAS_HEIGHT * ratio;
         else CANVAS_HEIGHT = CANVAS_WIDTH / ratio;
-        CANVAS_WIDTH = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth ;
-        CANVAS_HEIGHT =window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ;
+        CANVAS_WIDTH =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        CANVAS_HEIGHT =
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
         canvas.width = WIDTH;
         canvas.height = HEIGHT;
-        canvas.style.width = '' + CANVAS_WIDTH + 'px';
-        canvas.style.height = '' + CANVAS_HEIGHT + 'px';
+        canvas.style.width = "" + CANVAS_WIDTH + "px";
+        canvas.style.height = "" + CANVAS_HEIGHT + "px";
         game.font = "30px Arial";
-        left_canvas.style.width = '' + CANVAS_WIDTH / 10+ 'px';
-        left_canvas.style.height = '' + CANVAS_HEIGHT / 10+ 'px';
-        left_game.font = "" + 2 +"vw Arial";
-        right_canvas.style.width = '' + CANVAS_WIDTH / 10+ 'px';
-        right_canvas.style.height = '' + CANVAS_HEIGHT / 10+ 'px';
-        right_game.font = "" + 1 +"vw Arial";
+        left_canvas.style.width = "" + CANVAS_WIDTH / 10 + "px";
+        left_canvas.style.height = "" + CANVAS_HEIGHT / 10 + "px";
+        left_game.font = "" + 2 + "vw Arial";
+        right_canvas.style.width = "" + CANVAS_WIDTH / 10 + "px";
+        right_canvas.style.height = "" + CANVAS_HEIGHT / 10 + "px";
+        right_game.font = "" + 1 + "vw Arial";
       };
       window.addEventListener("resize", function() {
-      resize();
+        resize();
       });
 
       resize();
@@ -340,9 +366,10 @@
 
     <script>
       var pregame = null;
-      if (!pregame) pregame = setInterval(function() {
-        startGame();
-      }, 1000);
+      if (!pregame)
+        pregame = setInterval(function() {
+          startGame();
+        }, 1000);
     </script>
     <script src="chat.js"></script>
     <script src="menu.js"></script>

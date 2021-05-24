@@ -206,8 +206,7 @@ class Player extends Element {
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
             var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
-            if (this.shield !== undefined && this.shield) {
-              return;
+            if (Player.list[i].shield !== undefined && Player.list[i].shield) {
             } else if (x + 1 === xPlayer && yPlayer === y) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
@@ -219,9 +218,7 @@ class Player extends Element {
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
             var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
-
-            if (this.shield !== undefined && this.shield) {
-              return;
+            if (Player.list[i].shield !== undefined && Player.list[i].shield) {
             } else if (x - 1 === xPlayer && yPlayer === y) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
@@ -232,9 +229,7 @@ class Player extends Element {
             var y = Math.floor(this.y / Map.TILE_SIZE);
             var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
             var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
-
-            if (this.shield !== undefined && this.shield) {
-              return;
+            if (Player.list[i].shield !== undefined && Player.list[i].shield) {
             } else if (x === xPlayer && yPlayer === y - 1) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
@@ -246,8 +241,7 @@ class Player extends Element {
             var xPlayer = Math.floor(Player.list[i].x / Map.TILE_SIZE);
             var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
 
-            if (this.shield !== undefined && this.shield) {
-              return;
+            if (Player.list[i].shield !== undefined && Player.list[i].shield) {
             } else if (x === xPlayer && yPlayer === y + 1) {
               Player.list[i].life -= this.atk;
               this.ult += 1;
@@ -343,6 +337,7 @@ class Player extends Element {
           }
           if (Enemy.list[i].life <= 0) {
             if (Player.list[this.id]) {
+              this.frag += 1;
               this.score += 2;
               this.ult += 5;
             }
@@ -393,8 +388,14 @@ class Player extends Element {
    * Call the right type of skill
    */
   skill() {
-    if (this.stamina < 15) return;
-    else this.stamina -= 15;
+    if (
+      this.class === "archer" &&
+      this.speedUp !== undefined &&
+      this.speedUp === true
+    )
+      return;
+    if (this.stamina < 10) return;
+    else this.stamina -= 10;
     if (this.stamina <= 0) this.stamina = 0;
     switch (this.class) {
       case "warrior":
@@ -410,46 +411,50 @@ class Player extends Element {
               var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
 
               if (this.direction === 1) {
-                if (this.shield !== undefined && this.shield) {
-                  return;
+                if (
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
                 } else if (
-                  (y =
-                    yPlayer &&
-                    (x + 1 === xPlayer ||
-                      x + 2 === xPlayer ||
-                      x + 3 === xPlayer))
+                  y === yPlayer &&
+                  (x + 1 === xPlayer || x + 2 === xPlayer || x + 3 === xPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 2) {
                 if (
-                  (y =
-                    yPlayer &&
-                    (x - 1 === xPlayer ||
-                      x - 2 === xPlayer ||
-                      x - 3 === xPlayer))
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
+                } else if (
+                  y === yPlayer &&
+                  (x - 1 === xPlayer || x - 2 === xPlayer || x - 3 === xPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 }
               } else if (this.direction === 3) {
                 if (
-                  (x =
-                    xPlayer &&
-                    (y - 1 === yPlayer ||
-                      y - 2 === yPlayer ||
-                      y - 3 === yPlayer))
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
+                } else if (
+                  x === xPlayer &&
+                  (y - 1 === yPlayer || y - 2 === yPlayer || y - 3 === yPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.ult += 3;
                 } else {
                   if (
-                    (x =
-                      xPlayer &&
-                      (y + 1 === yPlayer ||
-                        y + 2 === yPlayer ||
-                        y + 3 === yPlayer))
+                    Player.list[i].shield !== undefined &&
+                    Player.list[i].shield
+                  ) {
+                  } else if (
+                    x === xPlayer &&
+                    (y + 1 === yPlayer ||
+                      y + 2 === yPlayer ||
+                      y + 3 === yPlayer)
                   ) {
                     Player.list[i].life -= this.atk * 2;
                     this.ult += 3;
@@ -537,6 +542,7 @@ class Player extends Element {
               }
               if (Enemy.list[i].life <= 0) {
                 if (Player.list[this.id]) {
+                  this.frag += 1;
                   this.score += 5;
                   this.ult += 5;
                 }
@@ -573,14 +579,13 @@ class Player extends Element {
               var yPlayer = Math.floor(Player.list[i].y / Map.TILE_SIZE);
 
               if (this.direction === 1) {
-                if (this.shield !== undefined && this.shield) {
-                  return;
+                if (
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
                 } else if (
-                  (y =
-                    yPlayer &&
-                    (x + 1 === xPlayer ||
-                      x + 2 === xPlayer ||
-                      x + 3 === xPlayer))
+                  y === yPlayer &&
+                  (x + 1 === xPlayer || x + 2 === xPlayer || x + 3 === xPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
@@ -588,11 +593,12 @@ class Player extends Element {
                 }
               } else if (this.direction === 2) {
                 if (
-                  (y =
-                    yPlayer &&
-                    (x - 1 === xPlayer ||
-                      x - 2 === xPlayer ||
-                      x - 3 === xPlayer))
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
+                } else if (
+                  y === yPlayer &&
+                  (x - 1 === xPlayer || x - 2 === xPlayer || x - 3 === xPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
@@ -600,22 +606,26 @@ class Player extends Element {
                 }
               } else if (this.direction === 3) {
                 if (
-                  (x =
-                    xPlayer &&
-                    (y - 1 === yPlayer ||
-                      y - 2 === yPlayer ||
-                      y - 3 === yPlayer))
+                  Player.list[i].shield !== undefined &&
+                  Player.list[i].shield
+                ) {
+                } else if (
+                  x === xPlayer &&
+                  (y - 1 === yPlayer || y - 2 === yPlayer || y - 3 === yPlayer)
                 ) {
                   Player.list[i].life -= this.atk * 2;
                   this.life += this.atk * 2;
                   this.ult += 3;
                 } else {
                   if (
-                    (x =
-                      xPlayer &&
-                      (y + 1 === yPlayer ||
-                        y + 2 === yPlayer ||
-                        y + 3 === yPlayer))
+                    Player.list[i].shield !== undefined &&
+                    Player.list[i].shield
+                  ) {
+                  } else if (
+                    x === xPlayer &&
+                    (y + 1 === yPlayer ||
+                      y + 2 === yPlayer ||
+                      y + 3 === yPlayer)
                   ) {
                     Player.list[i].life -= this.atk * 2;
                     this.life += this.atk * 2;
@@ -632,8 +642,6 @@ class Player extends Element {
                   this.ult += 5;
                   this.life += this.atk * 2.5;
                 }
-                if (Player.list[this.id].ult > Player.list[this.id].maxUlt)
-                  Player.list[this.id].ult = Player.list[this.id].maxUlt;
 
                 Player.list[i].life = Player.list[i].maxLife;
                 Player.list[i].x = Math.random() * Map.WIDTH;
@@ -651,6 +659,8 @@ class Player extends Element {
                   Player.list[i].y = Math.random() * Map.HEIGHT;
                 }
               }
+              if (this.ult > this.maxUlt) this.ult = this.maxUlt;
+              if (this.life > this.maxLife) this.life = this.maxLife;
             }
           }
         } else if (this.room && global.Rooms[this.room].mode === "survival") {
@@ -709,14 +719,17 @@ class Player extends Element {
               }
               if (Enemy.list[i].life <= 0) {
                 if (Player.list[this.id]) {
+                  this.frag += 1;
                   this.score += 5;
                   this.ult += 5;
                   this.life += this.atk * 2.5;
                 }
-                if (this.ult > this.maxUlt) this.ult = this.maxUlt;
+
                 global.REMOVE_DATA.enemy.push(Enemy.list[i].id);
                 delete Enemy.list[i];
               }
+              if (this.ult > this.maxUlt) this.ult = this.maxUlt;
+              if (this.life > this.maxLife) this.life = this.maxLife;
             }
           }
         }
@@ -724,11 +737,14 @@ class Player extends Element {
       case "archer":
         var lastSpeed = this.speedMove;
         var lastRange = this.maxTimer;
-        this.speedMove *= 1.2;
+        this.speedUp = true;
+        if (!this.speedUp) this.speedMove *= 1.15;
+
         this.maxTimer *= 2;
         setTimeout(() => {
           this.speedMove = lastSpeed;
           this.maxTimer = lastRange;
+          this.speedUp = false;
         }, 8000);
         break;
     }
@@ -788,10 +804,34 @@ class Player extends Element {
               index = i;
             }
           }
-          if (this.shield !== undefined && this.shield) {
-            return;
+          if (
+            Player.list[index].shield !== undefined &&
+            Player.list[index].shield
+          ) {
           } else if (closest < 200) {
             Player.list[index].life -= this.atk * 8;
+            if (Player.list[index].life <= 0) {
+              if (Player.list[this.id]) {
+                this.frag += 1;
+                this.score += 5;
+              }
+
+              Player.list[index].life = Player.list[index].maxLife;
+              Player.list[index].x = Math.random() * Map.WIDTH;
+              Player.list[index].y = Math.random() * Map.HEIGHT;
+              while (
+                Player.list[index].wallDetection(
+                  {
+                    x: Player.list[index].x,
+                    y: Player.list[index].y
+                  },
+                  global.Rooms[this.room].map
+                )
+              ) {
+                Player.list[index].x = Math.random() * Map.WIDTH;
+                Player.list[index].y = Math.random() * Map.HEIGHT;
+              }
+            }
             for (var i in global.SOCKET_LIST) {
               if (global.clientRooms[i] === global.clientRooms[this.id])
                 global.SOCKET_LIST[i].emit("ultimate", {
@@ -881,17 +921,17 @@ class Player extends Element {
       ) {
         Item.list[i].toRemove = true;
         if (Item.list[i].property === "heal" && this.life > 0) {
-          this.life += 15;
+          this.life += 20;
           if (this.life > this.maxLife) {
             this.life = this.maxLife;
           }
         } else if (Item.list[i].property === "stamina") {
-          this.stamina += 10;
+          this.stamina += 20;
           if (this.stamina > this.maxStamina) {
             this.stamina = this.maxStamina;
           }
         } else {
-          this.ult += 10;
+          this.ult += 20;
           if (this.ult > this.maxUlt) {
             this.ult = this.maxUlt;
           }
@@ -979,6 +1019,23 @@ Player.onConnect = function(socket) {
  * @param {socket} socket - Socket with the player's ID.
  */
 Player.onDisconnect = function(socket) {
+  if (global.Rooms[global.clientRooms[socket.id]] !== undefined) {
+    global.Rooms[global.clientRooms[socket.id]].numberPlayers -= 1;
+  if (global.Rooms[global.clientRooms[socket.id]].numberPlayers < 2) {
+    for (var i in Player.list) {
+      if (
+        Player.list[i].room === global.clientRooms[socket.id] &&
+        socket.id !== Player.list[i].id
+      ) {
+        global.SOCKET_LIST[i].emit("gameOver", {
+          room: global.clientRooms[socket.id],
+          winner: Player.list[i].id
+        });
+      }
+    }
+  }
+  }
+    
   delete Player.list[socket.id];
   global.REMOVE_DATA.player.push(socket.id);
   socket.leave(global.clientRooms[socket.id]);
@@ -1081,16 +1138,14 @@ class Enemy extends Element {
       if (playerIndex !== null) {
         var aStar = require("javascript-astar");
         var graph = new aStar.Graph(Map.array2D[map], { diagonal: false });
-        var startX = null;
-        var startY = null;
-        if (this.x < Player.list[playerIndex].x) startX = this.x + 16;
-        else startX = this.x - 16;
 
-        if (this.y < Player.list[playerIndex].y) startY = this.y + 16;
-        else startY = this.y - 16;
+        var startX = this.x;
+        var startY = this.y;
+        if (Player.list[playerIndex].x < this.x) startX = this.x + 32;
+        if (Player.list[playerIndex].y < this.y) startY = this.y + 32;
         var start =
-          graph.grid[Math.floor((startY) / Map.TILE_SIZE)][
-            Math.floor((startX) / Map.TILE_SIZE)
+          graph.grid[Math.floor(startY / Map.TILE_SIZE)][
+            Math.floor(startX / Map.TILE_SIZE)
           ];
         var end =
           graph.grid[Math.floor(Player.list[playerIndex].y / Map.TILE_SIZE)][
@@ -1117,7 +1172,25 @@ class Enemy extends Element {
             this.x -= this.speedMove;
             this.direction = 2;
           }
-        } else if (closest < 80) {
+        } else if (closest >= 85 && (!diffX || !diffY)) {
+          if (!diffX) {
+            if (Math.floor(Player.list[playerIndex].x) > Math.floor(this.x)) {
+              this.x += this.speedMove;
+              this.direction = 1;
+            } else {
+              this.x -= this.speedMove;
+              this.direction = 2;
+            }
+          } else if (!diffY) {
+            if (Math.floor(Player.list[playerIndex].y) > Math.floor(this.y)) {
+              this.y += this.speedMove;
+              this.direction = 4;
+            } else {
+              this.y -= this.speedMove;
+              this.direction = 3;
+            }
+          }
+        } else if (closest < 85) {
           diffX = Math.floor(Player.list[playerIndex].x - this.x);
           diffY = Math.floor(Player.list[playerIndex].y - this.y);
           if (diffX === 0) {
@@ -1139,14 +1212,26 @@ class Enemy extends Element {
               this.direction = 2;
             }
           }
-          this.attack(playerIndex);
+          if (this.timerAttack === undefined) {
+            this.timerAttack = 0;
+            this.attack(playerIndex);
+          }
+          if (this.timerAttack === 15) {
+            this.timerAttack = 0;
+            this.attack(playerIndex);
+          } else {
+            this.timerAttack += 1;
+          }
         }
       }
     }
   }
 
   attack(target) {
-    if (this.shield !== undefined && this.shield) {
+    if (
+      Player.list[target].shield !== undefined &&
+      Player.list[target].shield
+    ) {
       return;
     } else {
       Player.list[target].life -= this.atk;
@@ -1310,7 +1395,10 @@ class Projectile extends Element {
     if (this.timer++ > this.maxTimer) this.toRemove = true;
     this.x += this.speedX;
     this.y += this.speedY;
-    if (global.Rooms[this.room].mode === "ffa") {
+    if (
+      global.Rooms[this.room] !== undefined &&
+      global.Rooms[this.room].mode === "ffa"
+    ) {
       for (var i in Player.list) {
         var object = Player.list[i];
         if (
@@ -1318,8 +1406,7 @@ class Projectile extends Element {
           this.user !== object.id &&
           global.clientRooms[this.user] === global.clientRooms[object.id]
         ) {
-          if (this.shield !== undefined && this.shield) {
-            return;
+          if (object.shield !== undefined && object.shield) {
           } else if (
             this.ultArrow === true &&
             this.direction === object.direction
@@ -1362,7 +1449,10 @@ class Projectile extends Element {
           this.toRemove = true;
         }
       }
-    } else if (global.Rooms[this.room].mode === "survival") {
+    } else if (
+      global.Rooms[this.room] !== undefined &&
+      global.Rooms[this.room].mode === "survival"
+    ) {
       for (var i in Enemy.list) {
         var object = Enemy.list[i];
         if (
@@ -1387,6 +1477,7 @@ class Projectile extends Element {
           if (object.life <= 0) {
             if (Player.list[this.user]) {
               Player.list[this.user].score += 2;
+              Player.list[this.user].frag += 1;
               Player.list[this.user].ult += 5;
             }
             global.REMOVE_DATA.enemy.push(object.id);

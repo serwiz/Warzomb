@@ -1,10 +1,16 @@
-
 // for cross browser
 window.requestAnimFrame = (function(callback) {
-  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
-    window.setTimeout(callback, 100);
-  };
-}());
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 100);
+    }
+  );
+})();
 /**
  * main function to update and draw the game;
  */
@@ -14,10 +20,11 @@ function mainGame() {
   // map
   game.clearRect(0, 0, WIDTH, HEIGHT);
   game.drawImage(map, 0, 0);
-  if (clientPlayer.list[playerId] !== undefined &&
+  if (
+    clientPlayer.list[playerId] !== undefined &&
     (clientPlayer.list[playerId].score !== lastScore ||
-    clientPlayer.list[playerId].frag !== lastFrag ||
-    clientPlayer.list[playerId].death !== lastDeath)
+      clientPlayer.list[playerId].frag !== lastFrag ||
+      clientPlayer.list[playerId].death !== lastDeath)
   ) {
     left_game.clearRect(0, 0, left_game.canvas.width, left_game.canvas.height);
 
@@ -26,14 +33,29 @@ function mainGame() {
     lastDeath = clientPlayer.list[playerId].death;
     drawHud();
   }
-  if (clientPlayer.list[playerId] !== undefined && (clientPlayer.list[playerId].life !== lastLife || clientPlayer.list[playerId].stamina !== lastStamina || clientPlayer.list[playerId].ult !== lastUlt)) {
-    right_game.clearRect(0, 0, right_game.canvas.width, right_game.canvas.height);
+  if (
+    clientPlayer.list[playerId] !== undefined &&
+    (clientPlayer.list[playerId].life !== lastLife ||
+      clientPlayer.list[playerId].stamina !== lastStamina ||
+      clientPlayer.list[playerId].ult !== lastUlt)
+  ) {
+    right_game.clearRect(
+      0,
+      0,
+      right_game.canvas.width,
+      right_game.canvas.height
+    );
     lastLife = clientPlayer.list[playerId].life;
     lastStamina = clientPlayer.list[playerId].stamina;
     lastUlt = clientPlayer.list[playerId].ult;
     drawBars();
   }
-  drawObjects(clientPlayer.list, clientProjectile.list, clientEnemy.list, clientObject.list);
+  drawObjects(
+    clientPlayer.list,
+    clientProjectile.list,
+    clientEnemy.list,
+    clientObject.list
+  );
 }
 
 /**
@@ -85,7 +107,10 @@ function drawObjects(players, projectiles, enemies, objects) {
         );
       }
 
-      if(players[i].useSkill && (players[i].class === "warrior" || players[i].class === "tank")) {
+      if (
+        players[i].useSkill &&
+        (players[i].class === "warrior" || players[i].class === "tank")
+      ) {
         width = 128;
         height = 128;
         var xDraw = null;
@@ -109,78 +134,88 @@ function drawObjects(players, projectiles, enemies, objects) {
             break;
         }
 
-        game.drawImage (
-          players[i].skill, 
+        game.drawImage(
+          players[i].skill,
           players[i].frameSkillX * width,
           players[i].frameSkillY * height,
-          width, 
-          height, 
+          width,
+          height,
           players[i].x - width / scale + xDraw,
           players[i].y - height / scale + yDraw,
-          width ,
-          height)
-        
-        if (players[i].frameSkillX < 3) players[i].frameSkillX ++;
+          width,
+          height
+        );
+
+        if (players[i].frameSkillX < 3) players[i].frameSkillX++;
         else {
           players[i].frameSkillX = 0;
           players[i].frameSkillY += 1;
-        } 
-        if (players[i].frameSkillY > 3){
+        }
+        if (players[i].frameSkillY > 3) {
           players[i].useSkill = false;
           players[i].frameSkillX = 0;
           players[i].frameSkillY = 0;
-        } 
+        }
       }
 
-      if(players[i].useUlt && players[i].class === "sorcerer" && players[i].target) {
-        var target = Option.list[players[i].room].mode === "survival" ? enemies[players[i].target] : players[players[i].target];
+      if (
+        players[i].useUlt &&
+        players[i].class === "sorcerer" &&
+        players[i].target
+      ) {
+        var target =
+          Option.list[players[i].room].mode === "survival"
+            ? enemies[players[i].target]
+            : players[players[i].target];
         width = 128;
         height = 128;
-        game.drawImage (
-          players[i].ultSkill, 
+        game.drawImage(
+          players[i].ultSkill,
           players[i].frameUltX * width,
           players[i].frameUltY * height,
-          width, 
-          height, 
-          target.x - width / (scale) ,
-          target.y - height /(scale)  ,
-          width ,
-          height)
-        
-        if (players[i].frameUltX < 3) players[i].frameUltX ++;
+          width,
+          height,
+          target.x - width / scale,
+          target.y - height / scale,
+          width,
+          height
+        );
+
+        if (players[i].frameUltX < 3) players[i].frameUltX++;
         else {
           players[i].frameUltX = 0;
           players[i].frameUltY += 1;
-        } 
-        if (players[i].frameUltY > 3){
+        }
+        if (players[i].frameUltY > 3) {
           players[i].useUlt = false;
           players[i].frameUltX = 0;
           players[i].frameUltY = 0;
           players[i].target = null;
-        } 
+        }
       } else if (players[i].useUlt && players[i].class === "tank") {
         width = 128;
         height = 128;
-        game.drawImage (
-          players[i].ultSkill, 
+        game.drawImage(
+          players[i].ultSkill,
           players[i].frameUltX * width,
           players[i].frameUltY * height,
-          width, 
-          height, 
-          players[i].x - width / (scale * 2) ,
-          players[i].y - height /(scale * 2)  ,
+          width,
+          height,
+          players[i].x - width / scale + 25,
+          players[i].y - height / scale + 25,
           width / scale + 30,
-          height / scale + 30)
-        
-        if (players[i].frameUltX < 3) players[i].frameUltX ++;
+          height / scale + 30
+        );
+
+        if (players[i].frameUltX < 3) players[i].frameUltX++;
         else {
           players[i].frameUltX = 0;
           players[i].frameUltY += 1;
-        } 
-        if (players[i].frameUltY > 3){
+        }
+        if (players[i].frameUltY > 3) {
           players[i].frameUltX = 0;
           players[i].frameUltY = 0;
-        } 
+        }
       }
     }
   }
@@ -188,72 +223,66 @@ function drawObjects(players, projectiles, enemies, objects) {
   height = 64;
   // projectiles
   for (var i in projectiles)
-  if (gameRoom && projectiles[i].room === gameRoom) {
-    if (projectiles[i].type === "arrow") {
-      switch (projectiles[i].direction) {
-        case 1:
-          projectiles[i].frameX = 4;
-          break;
-        case 2:
-          projectiles[i].frameX = 0;
-          break;
-        case 3:
-          projectiles[i].frameX = 2;
-          break;
-        case 4:
-          projectiles[i].frameX = 6;
-          break;
+    if (gameRoom && projectiles[i].room === gameRoom) {
+      if (projectiles[i].type === "arrow") {
+        switch (projectiles[i].direction) {
+          case 1:
+            projectiles[i].frameX = 4;
+            break;
+          case 2:
+            projectiles[i].frameX = 0;
+            break;
+          case 3:
+            projectiles[i].frameX = 2;
+            break;
+          case 4:
+            projectiles[i].frameX = 6;
+            break;
+        }
+      } else {
+        // sorcerer
+        projectiles[i].frameX = 0;
       }
-  
-    } else {
-      // sorcerer
-      projectiles[i].frameX = 0;
+      game.drawImage(
+        projectiles[i].sprite,
+        projectiles[i].frameX * width,
+        0,
+        width,
+        height,
+        projectiles[i].x,
+        projectiles[i].y,
+        width / scale,
+        height / scale
+      );
     }
-    game.drawImage(
-      projectiles[i].sprite,
-      projectiles[i].frameX * width,
-      0,
-      width,
-      height,
-      projectiles[i].x ,
-      projectiles[i].y ,
-      width /scale,
-      height / scale
-    );
-  }
   // enemies
   for (var i in enemies) {
     if (gameRoom && enemies[i].room === gameRoom) {
       game.fillStyle = "red";
-    var hpBar = (30 * enemies[i].life) / enemies[i].maxLife;
-    game.fillRect(
-      enemies[i].x - (hpBar / scale) * 3,
-      enemies[i].y ,
-      hpBar,
-      4
-    );
+      var hpBar = (30 * enemies[i].life) / enemies[i].maxLife;
+      game.fillRect(enemies[i].x - 16, enemies[i].y - 32, hpBar, 4);
 
-    if (enemies[i].inAction) {
-      width = 192;
-      height = 192;
-      tmp = 1346;
-      game.drawImage(
-        enemies[i].character,
-        enemies[i].frameX * width,
-        enemies[i].frameY * height + tmp,
-        width,
-        height,
-        enemies[i].x - width/scale,
-        enemies[i].y - height/scale,
-        width,
-        height
-      );
-      if (enemies[i].frameX < 5) enemies[i].frameX ++;
+      if (enemies[i].inAction) {
+        width = 192;
+        height = 192;
+        tmp = 1346;
+        game.drawImage(
+          enemies[i].character,
+          enemies[i].frameX * width,
+          enemies[i].frameY * height + tmp,
+          width,
+          height,
+          enemies[i].x - width / scale,
+          enemies[i].y - height / scale,
+          width,
+          height
+        );
+        if (enemies[i].frameX < 5) enemies[i].frameX++;
         else {
           tmp = 0;
           enemies[i].frameX = 0;
           enemies[i].inAction = false;
-          switch(enemies[i].direction) {
+          switch (enemies[i].direction) {
             case 1:
               enemies[i].frameY = 11;
               break;
@@ -267,23 +296,23 @@ function drawObjects(players, projectiles, enemies, objects) {
               enemies[i].frameY = 10;
               break;
           }
-        } 
-    } else {
-      width = 64;
-      height = 64;
-      game.drawImage(
-        enemies[i].character,
-        enemies[i].frameX * width,
-        enemies[i].frameY * height,
-        width,
-        height,
-        enemies[i].x - width / scale,
-        enemies[i].y - height / scale,
-        width,
-        height
-      );
+        }
+      } else {
+        width = 64;
+        height = 64;
+        game.drawImage(
+          enemies[i].character,
+          enemies[i].frameX * width,
+          enemies[i].frameY * height,
+          width,
+          height,
+          enemies[i].x - width / scale,
+          enemies[i].y - height / scale,
+          width,
+          height
+        );
+      }
     }
-    } 
   }
 
   for (var i in objects) {
@@ -294,16 +323,15 @@ function drawObjects(players, projectiles, enemies, objects) {
         objects[i].sprite,
         objects[i].frameX * width,
         objects[i].frameY * height,
-        width ,
-        height ,
+        width,
+        height,
         objects[i].x - (width / scale) * 2,
         objects[i].y - (height / scale) * 2,
         width + 8,
         height + 8
       );
     }
-    }
-    
+  }
 }
 
 /**
@@ -319,7 +347,7 @@ function drawHud() {
       clientPlayer.list[playerId].score,
     0,
     50,
-    left_game.canvas.width  
+    left_game.canvas.width
   );
 }
 
@@ -334,8 +362,18 @@ function drawBars() {
   right_game.strokeStyle = "black";
   right_game.fillStyle = "#E43C3C";
   if (hpBar < 0) hpBar = 0;
-  right_game.fillRect(0, 0, hpBar * right_game.canvas.width / 100, right_game.canvas.height / 3);
-  right_game.strokeRect(0, 0, right_game.canvas.width, right_game.canvas.height / 3);
+  right_game.fillRect(
+    0,
+    0,
+    (hpBar * right_game.canvas.width) / 100,
+    right_game.canvas.height / 3
+  );
+  right_game.strokeRect(
+    0,
+    0,
+    right_game.canvas.width,
+    right_game.canvas.height / 3
+  );
 
   right_game.fillStyle = "white";
   right_game.fillText(
@@ -353,8 +391,18 @@ function drawBars() {
   right_game.strokeStyle = "black";
   right_game.fillStyle = "#00CFDF";
   if (staminaBar < 0) staminaBar = 0;
-  right_game.fillRect(0, right_game.canvas.height / 3, staminaBar * right_game.canvas.width / 100, right_game.canvas.height / 3);
-  right_game.strokeRect(0, right_game.canvas.height / 3, right_game.canvas.width, right_game.canvas.height / 3);
+  right_game.fillRect(
+    0,
+    right_game.canvas.height / 3,
+    (staminaBar * right_game.canvas.width) / 100,
+    right_game.canvas.height / 3
+  );
+  right_game.strokeRect(
+    0,
+    right_game.canvas.height / 3,
+    right_game.canvas.width,
+    right_game.canvas.height / 3
+  );
 
   right_game.fillStyle = "white";
   right_game.fillText(
@@ -364,17 +412,27 @@ function drawBars() {
       clientPlayer.list[playerId].maxStamina,
     20,
     right_game.canvas.height / 2 + 10,
-    right_game.canvas.width 
+    right_game.canvas.width
   );
 
   var ultBar =
-  (100 * clientPlayer.list[playerId].ult) /
-  clientPlayer.list[playerId].maxUlt;
+    (100 * clientPlayer.list[playerId].ult) /
+    clientPlayer.list[playerId].maxUlt;
   right_game.strokeStyle = "black";
   right_game.fillStyle = "#695B95";
   if (ultBar < 0) ultBar = 0;
-  right_game.fillRect(0, 100, ultBar * right_game.canvas.width / 100, right_game.canvas.height / 3);
-  right_game.strokeRect(0, 100,right_game.canvas.width, right_game.canvas.height / 3);
+  right_game.fillRect(
+    0,
+    100,
+    (ultBar * right_game.canvas.width) / 100,
+    right_game.canvas.height / 3
+  );
+  right_game.strokeRect(
+    0,
+    100,
+    right_game.canvas.width,
+    right_game.canvas.height / 3
+  );
 
   right_game.fillStyle = "white";
   right_game.fillText(
@@ -384,8 +442,8 @@ function drawBars() {
       clientPlayer.list[playerId].maxUlt,
     20,
     right_game.canvas.height - 15,
-    right_game.canvas.width 
-);
+    right_game.canvas.width
+  );
 }
 
 /**
@@ -397,7 +455,24 @@ function drawEndScreen(result) {
   game.globalAlpha = 0.8;
   game.fillRect(0, 0, WIDTH, HEIGHT);
   game.fillStyle = "black";
-  $("#announcement").html("Game Ends <br/>" + result + "<br/> time: " + minutes + ":" + seconds);
+  if (result.time !== undefined) {
+    $("#announcement").html(
+      "Game Ends <br/>" +
+        "time: " +
+        minutes +
+        ":" +
+        seconds +
+        "<br/> bonus Frag: " +
+        result.frag +
+        "<br/> bonus Time: " +
+        result.time +
+        "<br/> Score: " +
+        result.score
+    );
+  } else {
+    $("#announcement").html("Game Ends <br/>" + result);
+  }
+
   $("#quit").show();
   $("#new").show();
   $("#ready").hide();
@@ -434,9 +509,8 @@ function blinkStart() {
 /**
  * Makes an html tag content blink for survival mode
  */
- function blinkWave() {
+function blinkWave() {
   $("#announcement").text("The enemies are getting stronger...");
   $("#announcement").fadeOut(500);
   $("#announcement").fadeIn(500);
 }
-
