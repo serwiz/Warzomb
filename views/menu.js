@@ -47,7 +47,11 @@ function newGame() {
     map: $("input[name=map]:checked").val(),
     class: $("input[name=class]:checked").val()
   };
-  if (room.mode !== undefined && room.map !== undefined && room.class !== undefined) {
+  if (
+    room.mode !== undefined &&
+    room.map !== undefined &&
+    room.class !== undefined
+  ) {
     socket.emit("newGame", room);
     $("#quit").hide();
     $("#new").hide();
@@ -63,17 +67,19 @@ function newGame() {
     $(".menu").hide();
     $("#hourglass").hide();
     $(".main").show();
-  
+
     Option.list[room.name] = new Option(room);
-    if (!pregame) pregame = setInterval(function() {startGame()}, 1000);
-  
+    if (!pregame)
+      pregame = setInterval(function() {
+        startGame();
+      }, 1000);
+
     if (room.map === "forest") map.src = srcForest;
     else if (room.map === "cavern") map.src = srcCavern;
     else if (room.map === "city") map.src = srcCity;
     else if (room.map === "desert") map.src = srcDesert;
-    else if (room.map === "swamp") map.src = srcSwamp; 
+    else if (room.map === "swamp") map.src = srcSwamp;
   }
-
 }
 
 /**
@@ -96,8 +102,11 @@ function joinGame(name, char) {
     $("#hourglass").hide();
     $(".main").show();
     gameRoom = name;
-    if (!pregame) pregame = setInterval(function() {startGame()}, 1000);
-    socket.emit("joinGame", {name:name, char:char,player:socket.name});
+    if (!pregame)
+      pregame = setInterval(function() {
+        startGame();
+
+      }, 1000);
+    socket.emit("joinGame", { name: name, char: char, player: socket.name });
   }
-  
 }

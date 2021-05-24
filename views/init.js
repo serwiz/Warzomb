@@ -97,25 +97,25 @@ var clientPlayer = function(config) {
   switch (config.class) {
     case "warrior":
       self.character.src = srcWarrior;
-      $(".skill1").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill1").css("background-image", "url(" + "../tileset/images/sword_icon" + ")");
       $(".skill2").css("background-image", "url(" + "../tileset/images/lion_icon" + ")");
-      $(".skill3").css("background-image", "url(" + "../tileset/images/lion_icon" + ")");
+      $(".skill3").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
       break;
     case "sorcerer":
       self.character.src = srcMage;
-      $(".skill1").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
-      $(".skill2").css("background-image", "url(" + "../tileset/images/lion_icon" + ")");
+      $(".skill1").css("background-image", "url(" + "../tileset/images/fireball_icon" + ")");
+      $(".skill2").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
       $(".skill3").css("background-image", "url(" + "../tileset/images/thunder_icon" + ")");
       break;
     case "archer":
       self.character.src = srcArcher;
-      $(".skill1").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
-      $(".skill2").css("background-image", "url(" + "../tileset/images/lion_icon" + ")");
-      $(".skill3").css("background-image", "url(" + "../tileset/images/thunder_icon" + ")");
+      $(".skill1").css("background-image", "url(" + "../tileset/images/bow_icon" + ")");
+      $(".skill2").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill3").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
       break;
     case "tank":
       self.character.src = srcTank;
-      $(".skill1").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill1").css("background-image", "url(" + "../tileset/images/mass_icon" + ")");
       $(".skill2").css("background-image", "url(" + "../tileset/images/snake_icon" + ")");
       $(".skill3").css("background-image", "url(" + "../tileset/images/shield_icon" + ")");
       break;

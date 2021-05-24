@@ -405,12 +405,6 @@ socket.on("skill", function(data) {
 });
 
 /**
- * When receiving the call, create the animation for the death
- *  @param {list} data - info about the player who's dead
- */
-socket.on("die", function(data) {});
-
-/**
  * Display lobbies on the website
  * @param  {list} data - list of info about lobbies saved in the server
  */
@@ -468,8 +462,6 @@ socket.on("full", function() {
  */
 socket.on("closeGame", function(message) {
   clearInterval(timer);
-  clearInterval(pregame);
-  pregame = null;
   gameRoom = null;
   timer = null;
   drawEndScreen(message);
@@ -510,11 +502,10 @@ socket.on("gameOver", function(data) {
         "/" +
         clientPlayer.list[playerId].score.toString(),
       result: "/",
-      id: clientPlayer.list[playerId].id
+      id: clientPlayer.list[playerId].id,
+      time: minutes + seconds / 60
     });
     clearInterval(timer);
-    clearInterval(pregame);
-    pregame = null;
     timer = null;
     $("#timer").empty();
   }
