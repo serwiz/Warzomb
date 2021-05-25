@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="offline.css" media="screen" />
     <link
       rel="stylesheet"
       type="text/css"
@@ -21,46 +20,100 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
-  </head>
-  <body>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <!-- Javascript files -->
     <script src="offline.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="classement.js"></script>
+  </head>
+
+  <body>
+    <!--#include virtual="views/header.html" -->
     <script type="text/javascript" src="header.js"></script>
 
     <div class="row">
       <div class="side">
         <h2>Actu</h2>
         <p>Derniers exploits du serveur :</p>
-        <p>
-          du blabla
-        </p>
-        <h3>Top Player</h3>
+
+        <h3>
+          <img height="30px" width="30px" src="../tileset/images/coupe.png" />
+          Top Player
+        </h3>
         <p>Ces joueurs ont tout donné:</p>
-        <div class="fakeimg" style="height:60px;">Image</div>
-        <br />
-        <div class="fakeimg" style="height:60px;">Image</div>
-        <br />
-        <div class="fakeimg" style="height:60px;">Image</div>
+        <div id="rank"></div>
       </div>
       <div class="main">
         <h2>Bienvenu !</h2>
         <h5>UVSQ groupe 5</h5>
-        <div class="fakeimg" style="height:200px;">Image</div>
-        <p>WARZOMB en quelques mots...</p>
+        <div class="fakeimg" style="height:400px;"></div>
+
         <p>
-          Un Pacman mais avec des gens qui se tirent dessus. Des missions,
-          objectifs et mode de jeux divers.
+          WarZomb est un mini-jeux de rôle en 2D, multijoueur en ligne. Il
+          comporte deux principales modes de jeux:
         </p>
+        <br />
+        <ul>
+          <li>
+            "Battle - Mélée Générale" : Tous contre tous, les joueurs doivent
+            effectuer le plus grand nombre d'éliminations en évitant le plus
+            possible de mourir. Au bout d'un certain temps la partie s'arrête et
+            le joueur ayant le meilleur ratio élimination/mort l'emporte. De 2 à
+            4joueurs
+          </li>
+          <br />
+          <li>
+            "Survie" : Le joueur doit survivre le plus longtemps possible,
+            contre des vagues de zombie de plus en plus fort. Il doit effectuer
+            le plus d'élimination possible.
+          </li>
+        </ul>
+
         <br />
         <h2>Un petit tutoriel ?</h2>
         <h5>A savoir avant de jouer:</h5>
-        <div class="fakeimg" style="height:200px;">Image</div>
-        <p>Some text..</p>
         <p>
-          Sunt in culpa qui officia deserunt mollit anim id est laborum
-          consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco.
+          Pour lancer une partie il suffit de cliquer sur la manette dans
+          l'onglet navigation un menu s'ouvrira et permettra au joueur de
+          rejoindre ou de crée une partie, une fois le choix effectué le joueur
+          devra choisir entre 5 cartes de jeu et 4 personnages , la partie se
+          lancera ensuite automatiquement.
         </p>
+        <br />
+        <h3>Navigation :</h3>
+        <table style=" color : black ; ">
+          <tr>
+            <td>Déplacement vers le bas</td>
+            <td>S</td>
+          </tr>
+          <tr>
+            <td>Déplacement vers le haut :</td>
+            <td>Z</td>
+          </tr>
+          <tr>
+            <td>Déplacement vers la gauche :</td>
+            <td>Q</td>
+          </tr>
+          <tr>
+            <td>Déplacement vers la droite :</td>
+            <td>D</td>
+          </tr>
+          <tr>
+            <td>Attaquer :</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Compétence :</td>
+            <td>A</td>
+          </tr>
+          <tr>
+            <td>Ultime :</td>
+            <td>E</td>
+          </tr>
+        </table>
+
+        <br />
       </div>
     </div>
 

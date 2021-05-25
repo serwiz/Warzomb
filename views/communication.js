@@ -165,6 +165,7 @@ socket.on("update", function(data) {
         if (data.player[i].class === "tank") player.character.src = srcTank;
         if (data.player[i].class === "archer") player.character.src = srcArcher;
       }
+      
 
       if (data.player[i].frag !== undefined) player.frag = data.player[i].frag;
     }
@@ -266,7 +267,10 @@ socket.on("delete", function(data) {
  *  @param {list} data - info about the player who's attacking
  */
 socket.on("slash", function(data) {
-  if (!clientPlayer.list[data.user].inAction) {
+  if (
+    clientPlayer.list[data.user].inAction !== undefined &&
+    !clientPlayer.list[data.user].inAction
+  ) {
     clientPlayer.list[data.user].inAction = true;
 
     // updating the sprite
@@ -298,7 +302,10 @@ socket.on("slash", function(data) {
  *  @param {list} data - info about the player who's attacking
  */
 socket.on("shoot", function(data) {
-  if (!clientPlayer.list[data.user].inAction) {
+  if (
+    clientPlayer.list[data.user].inAction !== undefined &&
+    !clientPlayer.list[data.user].inAction
+  ) {
     clientPlayer.list[data.user].inAction = true;
 
     // updating the sprite

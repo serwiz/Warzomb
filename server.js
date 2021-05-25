@@ -29,7 +29,129 @@ app.use("/tileset/images", express.static(__dirname + "/tileset/images"));
 app.use("/credits.txt", (request, response) => {
   response.sendFile(__dirname + "/credits.txt");
 });
+/**
+ * Set everything needed for a game on the server.
+ */
+app.post("/start", function(req, res) {
+  global.Rooms[req.body.room].state = true;
+  if (!global.Rooms[req.body.room].objects) {
+    global.Rooms[req.body.room].objectId = setInterval(function() {
+      if (Object.keys(Entity.Player.list).length) {
+        var o = Entity.Item.generateObject(req.body.room);
+      }
+    }, 15000);
+    global.Rooms[req.body.room].objects = true;
+  }
 
+  global.Rooms[req.body.room].staminaId = setInterval(function() {
+    for (var i in Entity.Player.list) {
+      if (
+        Entity.Player.list[i] &&
+        Entity.Player.list[i].stamina < Entity.Player.list[i].maxStamina
+      ) {
+        Entity.Player.list[i].stamina += 1;
+      }
+    }
+  }, 1500);
+
+  if (global.Rooms[req.body.room].mode === "survival") {
+    if (!global.Rooms[req.body.room].spawnActivation) {
+      global.Rooms[req.body.room].spawnId = setInterval(function() {
+        if (
+          Object.keys(Entity.Enemy.list).length + 1 <=
+            global.Rooms[req.body.room].numberEnemies &&
+          Object.keys(Entity.Player.list).length
+        ) {
+          var e = Entity.Enemy.randomGenerateEnemy(req.body.room);
+        }
+      }, global.Rooms[req.body.room].respawnTime * 1000);
+      global.Rooms[req.body.room].spawnActivation = true;
+    }
+  }
+
+  res.send("game's ready");
+});
+/* retrieve all  game parts */
+app.post("/parties", function(req, res) {
+  console.log(req.body["user"]);
+  admin
+    .database()
+    .ref()
+    .child("parties")
+    .get()
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        var data = snapshot.toJSON();
+        var retour = [];
+
+        for (var i in data) {
+          if (data[i]["joueur_id"] == req.body["user"]) {
+            retour.push(data[i]);
+          }
+        }
+
+        res.send(retour);
+      } else {
+        console.log(" aucune donnees ! ");
+        data = null;
+        var data = snapshot.toJSON();
+        res.send(data);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+/* retrieve all  game parts */
+app.post("/classement", function(req, res) {
+  admin
+    .database()
+    .ref()
+    .child("parties")
+    .get()
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        var data = snapshot.toJSON();
+        retour = [{}];
+        var cpt = 0;
+        for (var i in data) {
+          if (cpt < 3) {
+            retour.push(data[i]);
+            cpt++;
+          }
+        }
+        res.send(retour);
+      } else {
+        console.log(" aucune donnees ! ");
+        data = null;
+        var data = snapshot.toJSON();
+        res.send(data);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+
+/**
+ * Increase the difficulty after an amount of time for a survival mode
+ */
+app.post("/nextWave", function(req, res) {
+  if (
+    global.Rooms[req.body.room] !== undefined &&
+    global.Rooms[req.body.room].mode === "survival"
+  ) {
+    if (global.Rooms[req.body.room].wave < 10)
+      global.Rooms[req.body.room].wave += 1;
+  }
+  res.send("next wave");
+});
+
+app.use((req, res, next) => {
+  const error = new Error("Oops the page does not exist");
+  error.status = 404;
+  next(error);
+});
 // error handler middleware
 app.use((error, req, res, next) => {
   res.status(error.status || 500).send({
@@ -39,6 +161,7 @@ app.use((error, req, res, next) => {
     }
   });
 });
+
 ////////////////////////////////////////////////
 
 var admin = require("firebase-admin");
@@ -54,10 +177,12 @@ admin.initializeApp({
 /* insertion of the game in the database */
 let partie = function writeUserData(
   id_partie,
+  mode,
   datedeb,
   datefin,
   joueur_id,
   score,
+  points,
   result
 ) {
   admin
@@ -65,10 +190,12 @@ let partie = function writeUserData(
     .ref("parties/" + Math.floor(Math.random() * 50))
     .set({
       id_partie: id_partie,
+      mode: mode,
       datedeb: datedeb,
       datefin: datefin,
       joueur_id: joueur_id,
       score: score,
+      points: points,
       result: result
     });
 };
@@ -248,43 +375,67 @@ io.sockets.on("connection", function(socket) {
    */
   socket.on("endGame", function(data) {
     // Inserting the party in the Database
-    if (!data.name.includes("Guest_"))
+    if (!data.name.includes("Guest_")) {
+      if (global.Rooms[data.room].mode === "ffa")
+        var points = Entity.Player.list[socket.id].frag * 5;
+      else
+        var points = Math.floor(
+          Entity.Player.list[socket.id].frag * 5 +
+            data.time * 50 +
+            Entity.Player.list[socket.id].score
+        );
       partie(
         data["room"],
+        global.Rooms[data.room].mode,
         global.Rooms[data.room].beginning.toString(),
         data["datefin"],
         data["name"],
         data["score"],
+        points,
         data["result"]
       );
-    if (global.Rooms[data.room] !== undefined)global.Rooms[data.room].numberPlayers -= 1;
+    }
+
+    if (global.Rooms[data.room] !== undefined)
+      global.Rooms[data.room].numberPlayers -= 1;
     socket.leave(data.room);
     global.REMOVE_DATA.player.push(socket.id);
 
-
     // in ffa 2 players in game, if someone surrender then the other automatically win
-    if (global.Rooms[data.room] !== undefined && global.Rooms[data.room].numberPlayers < 2 && global.Rooms[data.room].mode === "ffa") {
+    if (
+      global.Rooms[data.room] !== undefined &&
+      global.Rooms[data.room].numberPlayers < 2 &&
+      global.Rooms[data.room].mode === "ffa"
+    ) {
       for (var i in Entity.Player.list) {
-        if (Entity.Player.list[i].id !== socket.id) {
+        if (
+          Entity.Player.list[i].id !== socket.id &&
+          global.clientRooms[i] === data.room
+        ) {
           var message = "Victory";
           global.SOCKET_LIST[i].emit("closeGame", message);
-          Entity.Player.list[i].reset();
           global.SOCKET_LIST[i].leave(data.room);
+
+          if (!Entity.Player.list[i].name.includes("Guest_")) {
+            var points = Entity.Player.list[i].frag * 5;
+            partie(
+              data["room"],
+              global.Rooms[data.room].mode,
+              global.Rooms[data.room].beginning.toString(),
+              data["datefin"],
+              Entity.Player.list[i].name,
+              Entity.Player.list[i].frag +
+                "/" +
+                Entity.Player.list[i].death +
+                "/" +
+                Entity.Player.list[i].score,
+              points,
+              "win"
+            );
+          }
           global.REMOVE_DATA.player.push(i);
+          Entity.Player.list[i].reset();
         }
-        if (!data.name.includes("Guest_"))
-          partie(
-            data["room"],
-            global.Rooms[data.room].beginning.toString(),
-            data["datefin"],
-            Entity.Player.list[i].name,
-            Entity.Player.list[i].frag +
-              "/" +
-              Entity.Player.list[i].death +
-              "/" +
-              Entity.Player.list[i].score,
-            "win"
-          );
       }
     }
 
@@ -325,8 +476,8 @@ io.sockets.on("connection", function(socket) {
       message = "Victory";
     else if (data.result === "lose") message = "Lose";
     else {
-      var bonusFrag = Entity.Player.list[socket.id].frag * 5;
-      var bonusTimer = data.time * 50;
+      var bonusFrag = Math.floor(Entity.Player.list[socket.id].frag * 5);
+      var bonusTimer = Math.floor(data.time * 50);
       var score = bonusFrag + bonusTimer + Entity.Player.list[socket.id].score;
       message = { time: bonusTimer, frag: bonusFrag, score: score }; // this is for survival
     }
@@ -531,83 +682,3 @@ setInterval(function() {
   global.REMOVE_DATA.object = [];
   global.REMOVE_DATA.lobby = [];
 }, 1000 / 40);
-
-/**
- * Set everything needed for a game on the server.
- */
-app.post("/start", function(req, res) {
-  global.Rooms[req.body.room].state = true;
-  if (!global.Rooms[req.body.room].objects) {
-    global.Rooms[req.body.room].objectId = setInterval(function() {
-      if (Object.keys(Entity.Player.list).length) {
-        var o = Entity.Item.generateObject(req.body.room);
-      }
-    }, 15000);
-    global.Rooms[req.body.room].objects = true;
-  }
-
-  global.Rooms[req.body.room].staminaId = setInterval(function() {
-    for (var i in Entity.Player.list) {
-      if (
-        Entity.Player.list[i] &&
-        Entity.Player.list[i].stamina < Entity.Player.list[i].maxStamina
-      ) {
-        Entity.Player.list[i].stamina += 1;
-      }
-    }
-  }, 1500);
-
-  if (global.Rooms[req.body.room].mode === "survival") {
-    if (!global.Rooms[req.body.room].spawnActivation) {
-      global.Rooms[req.body.room].spawnId = setInterval(function() {
-        if (
-          Object.keys(Entity.Enemy.list).length + 1 <=
-            global.Rooms[req.body.room].numberEnemies &&
-          Object.keys(Entity.Player.list).length
-        ) {
-          var e = Entity.Enemy.randomGenerateEnemy(req.body.room);
-        }
-      }, global.Rooms[req.body.room].respawnTime * 1000);
-      global.Rooms[req.body.room].spawnActivation = true;
-    }
-  }
-
-  res.send("game's ready");
-});
-
-/* retrieve all  game parts */
-app.post("/parties", function(req, res) {
-  admin
-    .database()
-    .ref()
-    .child("parties")
-    .get()
-    .then(snapshot => {
-      if (snapshot.exists()) {
-        var data = snapshot.toJSON();
-        res.send(data);
-      } else {
-        console.log(" aucune donnees ! ");
-        data = null;
-        var data = snapshot.toJSON();
-        res.send(data);
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
-});
-
-/**
- * Increase the difficulty after an amount of time for a survival mode
- */
-app.post("/nextWave", function(req, res) {
-  if (
-    global.Rooms[req.body.room] !== undefined &&
-    global.Rooms[req.body.room].mode === "survival"
-  ) {
-    if (global.Rooms[req.body.room].wave < 10)
-      global.Rooms[req.body.room].wave += 1;
-  }
-  res.send("next wave");
-});

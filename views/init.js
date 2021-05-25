@@ -94,7 +94,7 @@ var clientPlayer = function(config) {
  
   clientPlayer.list[self.id] = self;
 
-  switch (config.class) {
+  switch (self.class) {
     case "warrior":
       self.character.src = srcWarrior;
       $(".skill1").css("background-image", "url(" + "../tileset/images/sword_icon" + ")");

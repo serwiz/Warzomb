@@ -9,7 +9,7 @@ var seconds = 0;
  */
 function setTimer() {
   $("#hourglass").show();
-    timer = setInterval(function() {
+  timer = setInterval(function() {
     document.getElementById("timer").innerText = minutes + ":" + seconds;
     if (seconds === 60) {
       minutes++;
@@ -20,7 +20,7 @@ function setTimer() {
       $.ajax({
         url: "/nextWave",
         method: "POST",
-        data : {room:gameRoom}
+        data: { room: gameRoom }
       })
         .done(function(response) {
           console.log(response);
@@ -38,7 +38,7 @@ function setTimer() {
           console.log("Request done");
         });
     }
-    seconds ++;
+    seconds++;
   }, 1000);
 }
 
@@ -63,7 +63,8 @@ function checkReady() {
  */
 function startGame() {
   if (checkReady()) {
-    Option.list[gameRoom].start = true;
+    if (Option.list[gameRoom]!== undefined)
+      Option.list[gameRoom].start = true;
     // displaying the right HUD
     $("#ready").hide();
     $("#surrender").show();
@@ -79,7 +80,7 @@ function startGame() {
       $.ajax({
         url: "/start",
         method: "POST",
-        data: { room: gameRoom}
+        data: { room: gameRoom }
       })
         .done(function(response) {
           console.log(response);
