@@ -120,5 +120,4 @@ dist
 .pnp.*
 
 # serviceAccountKey
-serviceAccountKey.json
 .serviceAccountKey.json
