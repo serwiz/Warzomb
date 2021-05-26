@@ -1267,11 +1267,12 @@ class Enemy extends Element {
     }
     if (checkContinue !== undefined && !checkContinue) {
       for (var i in global.SOCKET_LIST) {
-        if (Player.list[i].room === Player.list[target].room)
+        if (Player.list[i].room === Player.list[target].room){
           global.SOCKET_LIST[i].emit("gameOver", {
             room: this.room
           });
         global.REMOVE_DATA.player.push(i);
+        }
       }
     } else {
       for (var i in global.SOCKET_LIST) {
