@@ -216,6 +216,9 @@ function drawObjects(players, projectiles, enemies, objects) {
           players[i].frameUltX = 0;
           players[i].frameUltY = 0;
         }
+      }else if (!players[i].useUlt) {
+        players[i].frameUltX = 0;
+        players[i].frameUltY = 0;
       }
     }
   }
