@@ -165,7 +165,6 @@ socket.on("update", function(data) {
         if (data.player[i].class === "tank") player.character.src = srcTank;
         if (data.player[i].class === "archer") player.character.src = srcArcher;
       }
-      
 
       if (data.player[i].frag !== undefined) player.frag = data.player[i].frag;
     }
@@ -575,4 +574,13 @@ socket.on("cancelUltimate", function(data) {
   if (data.class === "tank") {
     clientPlayer.list[data.user].useUlt = false;
   }
+});
+
+/**
+ * When receiving the call, tell the user that the room already exist
+ * @param  {list} data - info about the the ultimate
+ */
+socket.on("exist", function(data) {
+  goToCreation();
+  alert("The room already exists, wait until the end of it");
 });

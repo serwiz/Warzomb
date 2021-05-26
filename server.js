@@ -112,7 +112,7 @@ app.post("/classement", function(req, res) {
     .then(snapshot => {
       if (snapshot.exists()) {
         var data = snapshot.toJSON();
-        retour = [{}];
+        var retour = [{}];
         var cpt = 0;
         for (var i in data) {
           if (cpt < 3) {
@@ -268,6 +268,13 @@ io.sockets.on("connection", function(socket) {
    * @param {list} room - a list of parameters linked to the party
    */
   socket.on("newGame", function(room) {
+    for (var i in global.Rooms) {
+      if (i === room.name) {
+        socket.emit("exist", { room: room.name });
+        return;
+      }
+    }
+
     global.clientRooms[socket.id] = room.name;
     global.Rooms[room.name] = new Lobby(room.map, room.mode, room.name);
     socket.emit("gameRoom", room.name);
@@ -506,7 +513,7 @@ io.sockets.on("connection", function(socket) {
    * On disconnection, delete the player from the server and delete all the enemies.
    */
   socket.on("disconnect", function() {
-    if (
+    if (global.Rooms[socket.id] !== undefined &&
       global.clientRooms[socket.id] !== undefined &&
       io.sockets.adapter.rooms.get(global.clientRooms[socket.id]) === undefined
     ) {

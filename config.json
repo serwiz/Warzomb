@@ -26,7 +26,7 @@
   "archer": {
     "class": "archer",
     "maxLife": 150,
-    "speedMove": 5,
+    "speedMove": 3,
     "maxStamina": 175,
     "atk": 6
   }
