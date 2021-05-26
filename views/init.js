@@ -94,24 +94,24 @@ var clientPlayer = function(config) {
  
   clientPlayer.list[self.id] = self;
 
-  switch (config.class) {
+  switch (self.class) {
     case "warrior":
       self.character.src = srcWarrior;
       $(".skill1").css("background-image", "url(" + "../tileset/images/sword_icon" + ")");
       $(".skill2").css("background-image", "url(" + "../tileset/images/lion_icon" + ")");
-      $(".skill3").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill3").css("background-image", "url(" + "../tileset/images/berserk_icon" + ")");
       break;
     case "sorcerer":
       self.character.src = srcMage;
       $(".skill1").css("background-image", "url(" + "../tileset/images/fireball_icon" + ")");
-      $(".skill2").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill2").css("background-image", "url(" + "../tileset/images/sorc_icon" + ")");
       $(".skill3").css("background-image", "url(" + "../tileset/images/thunder_icon" + ")");
       break;
     case "archer":
       self.character.src = srcArcher;
       $(".skill1").css("background-image", "url(" + "../tileset/images/bow_icon" + ")");
-      $(".skill2").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
-      $(".skill3").css("background-image", "url(" + "../tileset/images/ui_skill" + ")");
+      $(".skill2").css("background-image", "url(" + "../tileset/images/ranger_icon" + ")");
+      $(".skill3").css("background-image", "url(" + "../tileset/images/arrow_icon" + ")");
       break;
     case "tank":
       self.character.src = srcTank;

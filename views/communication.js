@@ -266,7 +266,10 @@ socket.on("delete", function(data) {
  *  @param {list} data - info about the player who's attacking
  */
 socket.on("slash", function(data) {
-  if (!clientPlayer.list[data.user].inAction) {
+  if (
+    clientPlayer.list[data.user].inAction !== undefined &&
+    !clientPlayer.list[data.user].inAction
+  ) {
     clientPlayer.list[data.user].inAction = true;
 
     // updating the sprite
@@ -298,7 +301,10 @@ socket.on("slash", function(data) {
  *  @param {list} data - info about the player who's attacking
  */
 socket.on("shoot", function(data) {
-  if (!clientPlayer.list[data.user].inAction) {
+  if (
+    clientPlayer.list[data.user].inAction !== undefined &&
+    !clientPlayer.list[data.user].inAction
+  ) {
     clientPlayer.list[data.user].inAction = true;
 
     // updating the sprite
@@ -568,4 +574,13 @@ socket.on("cancelUltimate", function(data) {
   if (data.class === "tank") {
     clientPlayer.list[data.user].useUlt = false;
   }
+});
+
+/**
+ * When receiving the call, tell the user that the room already exist
+ * @param  {list} data - info about the the ultimate
+ */
+socket.on("exist", function(data) {
+  goToCreation();
+  alert("The room already exists, wait until the end of it");
 });

@@ -16,9 +16,12 @@ body {
 .map_selection,
 .class_selection,
 .mode_selection,
-.validation {
+.validation,
+.lobbies
+{
   text-align: center;
 }
+
 
 button {
   display: inline-block;

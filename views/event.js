@@ -162,6 +162,7 @@ function surrender() {
  */
 function playAgain() {
   $("#announcement").empty();
+  $(".chatBox").empty();
   game.globalAlpha = 1;
   minutes = 0;
   seconds = 0;
@@ -173,6 +174,7 @@ function playAgain() {
  */
 function Quit() {
   // return index
+  $(".chatBox").empty();
   game.globalAlpha = 1;
   minutes = 0;
   seconds = 0;
@@ -183,14 +185,17 @@ function Quit() {
  * Stops the game when needed when something outside endGame or surrender happen, typically when a player has lost the connection
  */
 function interruptGame() {
-  if (Option.list[gameRoom] !== undefined && Option.list[gameRoom].mode === "ffa" && Option.list[gameRoom].start) {
+  if (
+    Option.list[gameRoom] !== undefined &&
+    Option.list[gameRoom].mode === "ffa" &&
+    Option.list[gameRoom].start
+  ) {
     var countPlayers = 0;
     for (var i in clientPlayer.list) {
       if (clientPlayer.list[i].room === gameRoom) {
         countPlayers += 1;
       }
     }
-    console.log (countPlayers)
     if (countPlayers === 1) {
       socket.emit("endGame", {
         room: clientPlayer.list[playerId].room.toString(),

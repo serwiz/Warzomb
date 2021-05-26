@@ -26,7 +26,7 @@ class Lobby {
         break;
       case "survival":
         this.numberEnemies = Math.random() * 10 + 3;
-        this.respawnTime = Math.random() * 20 + 5;
+        this.respawnTime = Math.random() * 10 + 5;
         this.wave = 1;
         this.spawnActivation = false;
         this.spawnId = null;

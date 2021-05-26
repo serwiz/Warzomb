@@ -1025,7 +1025,7 @@ Player.onDisconnect = function(socket) {
     for (var i in Player.list) {
       if (
         Player.list[i].room === global.clientRooms[socket.id] &&
-        socket.id !== Player.list[i].id
+        socket.id !== Player.list[i].id && global.Rooms[Player.list[i].room].mode === "ffa"
       ) {
         global.SOCKET_LIST[i].emit("gameOver", {
           room: global.clientRooms[socket.id],
@@ -1369,10 +1369,10 @@ class Projectile extends Element {
     this.timer = 0;
     switch (Player.list[this.user].class) {
       case "archer":
-        this.maxTimer = 50;
+        this.maxTimer = 60;
         break;
       case "sorcerer":
-        this.maxTimer = 25;
+        this.maxTimer = 40;
         break;
     }
     this.toRemove = false;

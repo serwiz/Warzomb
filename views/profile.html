@@ -1,16 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 
+  <head>
+    <title>Page de profil</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="profil.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="offline.css" media="screen" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="offline-language.css"
+      media="screen"
+    />
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="classement.js"></script>
+  </head>
+
+  <body>
+    <!--#include virtual="views/header.html" -->
+    <script type="text/javascript" src="header.js"></script>
+
+    <!-- Javascript files -->
+    <script src="offline.js"></script>
+    <script src="fireBase.js"></script>
+    <script src="index.js"></script>
+    <script>
+      /** allow us to check if a user is still connected */
+      var firebase = app_fireBase;
+      var user = firebase.auth().currentUser;
+      var name;
+      var email;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          name = user.displayName;
+          email = user.email;
+          var nameTag = document.getElementById("name");
+          var mailTag = document.getElementById("email");
+          nameTag.innerHTML += name;
+          mailTag.innerHTML +=
+            "<a id='mail_account' href='mailto:" +
+            email +
+            "'>" +
+            email +
+            "</a>";
+        } else {
+          console.log("no user detected");
+          window.location.replace("index.html");
+        }
+      });
+    </script>
+
+    <div class="row">
+      <div class="side">
+        <h2>Actu</h2>
+        <p>Derniers exploits du serveur :</p>
+        <h3>
+          <img height="30px" width="30px" src="../tileset/images/coupe.png" />
+          Top Player
+        </h3>
+        <p>Ces joueurs ont tout donné:</p>
+        <div id="rank"></div>
+      </div>
+      <div class="main">
+        <div class="container">
+          <div class="col-md-7 ">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="box box-info">
+                  <div class="box-body">
+                    <div class="col-sm-6">
+                      <div align="center">
+                        <img
+                          alt="User Pic"
+                          src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                          id="profile-image1"
+                        />
+
+                        <input
+                          id="profile-image-upload"
+                          class="hidden"
+                          type="file"
+                        />
+                        <div style="color:#999;">
+                          click here to change profile image
+                        </div>
+                        <!--Upload Image Js And Css-->
+                      </div>
 <head>
   <title>Page de profil</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="profil.css" media="screen" />
-
   <!-- The core Firebase JS SDK is always required and must be listed first -->
   <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
 
+
+                      <!-- /input-group -->
+                    </div>
+                    <div class="col-sm-6 rank-status">
+                      <span>
+                        <p>Aspirant</p>
+                      </span>
   <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
   <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
