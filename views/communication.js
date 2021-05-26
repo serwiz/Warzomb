@@ -361,7 +361,8 @@ socket.on("skill", function(data) {
   if (
     !clientPlayer.list[data.user].inAction &&
     !clientPlayer.list[data.user].useSkill &&
-    clientPlayer.list[data.user].class !== "archer"
+    (clientPlayer.list[data.user].class !== "archer" &&
+    clientPlayer.list[data.user].class !== "sorcerer")
   ) {
     clientPlayer.list[data.user].inAction = true;
     clientPlayer.list[data.user].useSkill = true;

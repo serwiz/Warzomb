@@ -559,11 +559,15 @@ class Player extends Element {
         if (this.ult > this.maxUlt) this.ult = this.maxUlt;
         var lastSpeed = this.speedMove;
         var lastAtk = this.atk;
-        this.speedMove *= 1.2;
-        this.atk *= 1.5;
+        this.speedUp = true;
+        this.attackUp = true;
+        if (!this.speedUp) this.speedMove *= 1.2;
+        if (!this.attackUp)this.atk *= 1.5;
         setTimeout(() => {
           this.speedMove = lastSpeed;
           this.atk = lastAtk;
+          this.speedUp = false;
+          this.attackUp = false;
         }, 6000);
         break;
       case "tank":
@@ -1021,21 +1025,22 @@ Player.onConnect = function(socket) {
 Player.onDisconnect = function(socket) {
   if (global.Rooms[global.clientRooms[socket.id]] !== undefined) {
     global.Rooms[global.clientRooms[socket.id]].numberPlayers -= 1;
-  if (global.Rooms[global.clientRooms[socket.id]].numberPlayers < 2) {
-    for (var i in Player.list) {
-      if (
-        Player.list[i].room === global.clientRooms[socket.id] &&
-        socket.id !== Player.list[i].id && global.Rooms[Player.list[i].room].mode === "ffa"
-      ) {
-        global.SOCKET_LIST[i].emit("gameOver", {
-          room: global.clientRooms[socket.id],
-          winner: Player.list[i].id
-        });
+    if (global.Rooms[global.clientRooms[socket.id]].numberPlayers < 2) {
+      for (var i in Player.list) {
+        if (
+          Player.list[i].room === global.clientRooms[socket.id] &&
+          socket.id !== Player.list[i].id &&
+          global.Rooms[Player.list[i].room].mode === "ffa"
+        ) {
+          global.SOCKET_LIST[i].emit("gameOver", {
+            room: global.clientRooms[socket.id],
+            winner: Player.list[i].id
+          });
+        }
       }
     }
   }
-  }
-    
+
   delete Player.list[socket.id];
   global.REMOVE_DATA.player.push(socket.id);
   socket.leave(global.clientRooms[socket.id]);

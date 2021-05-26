@@ -14,19 +14,12 @@ td {
   border: 1px solid black;
 }
 
-
 .side #classement div,
 table,
 tr,
 td {
   border: 0;
   color: black;
-
-.side #classement div , table ,tr,td
-{ 
-  border: 0;
-  color : black; 
-
 }
 /* Style the body */
 body {
@@ -118,32 +111,19 @@ body {
 
 /* Fake image, just for this example */
 .fakeimg {
-
   height: 500px;
   background-color: rgba(216, 106, 23, 1);
   background: url("../tileset/images/JeuCapture.png") no-repeat;
   background-size: 800px;
   padding: 10px;
-
-  height:500px;
-  background-color: rgba(216, 106, 23, 1);
-  background: url("../tileset/images/JeuCapture.png") no-repeat;
-  background-size: 800px;
-  padding:10px;
-
 }
 
 /* Footer */
 .footer {
   padding: 20px;
   text-align: center;
-
   color: white;
   background: rgba(216, 106, 23, 1);
-
-  color : white;
-  background :rgba(216, 106, 23, 1);
-
 }
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
