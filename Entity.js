@@ -39,6 +39,7 @@ class Player extends Element {
     this.death = 0;
 
     this.ready = false;
+    this.alive = true;
 
     Player.list[this.id] = this;
     global.INIT_DATA.player.push({
@@ -57,7 +58,8 @@ class Player extends Element {
       stamina: this.stamina,
       maxStamina: this.maxStamina,
       ult: this.ult,
-      maxUlt: this.maxUlt
+      maxUlt: this.maxUlt,
+      alive: this.alive
     });
   }
 
@@ -73,6 +75,7 @@ class Player extends Element {
     this.maxStamina = config.maxStamina;
     this.atk = config.atk;
     this.class = config.class;
+    this.alive = true;
   }
 
   /**
@@ -559,10 +562,14 @@ class Player extends Element {
         if (this.ult > this.maxUlt) this.ult = this.maxUlt;
         var lastSpeed = this.speedMove;
         var lastAtk = this.atk;
-        this.speedUp = true;
-        this.attackUp = true;
-        if (!this.speedUp) this.speedMove *= 1.2;
-        if (!this.attackUp)this.atk *= 1.5;
+        if (!this.speedUp) {
+          this.speedMove *= 1.3;
+          this.speedUp = true;
+        }
+        if (!this.attackUp) {
+          this.atk *= 1.5;
+          this.attackUp = true;
+        }
         setTimeout(() => {
           this.speedMove = lastSpeed;
           this.atk = lastAtk;
@@ -741,8 +748,10 @@ class Player extends Element {
       case "archer":
         var lastSpeed = this.speedMove;
         var lastRange = this.maxTimer;
-        this.speedUp = true;
-        if (!this.speedUp) this.speedMove *= 1.15;
+        if (!this.speedUp) {
+          this.speedMove *= 1.4;
+          this.speedUp = true;
+        }
 
         this.maxTimer *= 2;
         setTimeout(() => {
@@ -966,7 +975,8 @@ class Player extends Element {
       stamina: this.stamina,
       maxStamina: this.maxStamina,
       ult: this.ult,
-      maxUlt: this.maxUlt
+      maxUlt: this.maxUlt,
+      alive: this.alive
     };
   }
 }
@@ -1070,7 +1080,8 @@ Player.checkInfoPlayers = function() {
       direction: player.direction,
       ready: player.ready,
       stamina: player.stamina,
-      ult: player.ult
+      ult: player.ult,
+      alive: player.alive
     });
   }
   return info;
@@ -1146,8 +1157,6 @@ class Enemy extends Element {
 
         var startX = this.x;
         var startY = this.y;
-        if (Player.list[playerIndex].x < this.x) startX = this.x + 32;
-        if (Player.list[playerIndex].y < this.y) startY = this.y + 32;
         var start =
           graph.grid[Math.floor(startY / Map.TILE_SIZE)][
             Math.floor(startX / Map.TILE_SIZE)
@@ -1242,8 +1251,9 @@ class Enemy extends Element {
       Player.list[target].life -= this.atk;
     }
     if (Player.list[target].life <= 0) {
+      Player.list[target].life = 0;
       var checkContinue = false;
-      global.REMOVE_DATA.player.push(target);
+
       if (Player.list[target].alive) Player.list[target].alive = false;
       for (var i in Player.list) {
         if (
@@ -1257,16 +1267,19 @@ class Enemy extends Element {
     }
     if (checkContinue !== undefined && !checkContinue) {
       for (var i in global.SOCKET_LIST) {
-        global.SOCKET_LIST[i].emit("gameOver", {
-          room: this.room
-        });
+        if (Player.list[i].room === Player.list[target].room)
+          global.SOCKET_LIST[i].emit("gameOver", {
+            room: this.room
+          });
+        global.REMOVE_DATA.player.push(i);
       }
     } else {
       for (var i in global.SOCKET_LIST) {
-        global.SOCKET_LIST[i].emit("EnemyAttack", {
-          id: this.id,
-          direction: this.direction
-        });
+        if (Player.list[i].room === Player.list[target].room)
+          global.SOCKET_LIST[i].emit("EnemyAttack", {
+            id: this.id,
+            direction: this.direction
+          });
       }
     }
   }

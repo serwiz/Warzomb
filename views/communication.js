@@ -167,6 +167,7 @@ socket.on("update", function(data) {
       }
 
       if (data.player[i].frag !== undefined) player.frag = data.player[i].frag;
+      if (data.player[i].alive !== undefined) player.alive = data.player[i].alive;
     }
   }
   if (data.projectile)

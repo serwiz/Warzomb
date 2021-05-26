@@ -73,7 +73,7 @@ function drawObjects(players, projectiles, enemies, objects) {
   var tmp = 0;
   // players
   for (var i in players) {
-    if (gameRoom && players[i].room === gameRoom) {
+    if (gameRoom && players[i].room === gameRoom && players[i].alive) {
       if (players[i].inAction) {
         if (players[i].class === "warrior" || players[i].class === "tank") {
           width = 192;

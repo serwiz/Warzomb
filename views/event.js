@@ -7,6 +7,11 @@
 document.onkeydown = function(event) {
   if (!playerId) return;
   if (
+    clientPlayer.list[playerId] !== undefined &&
+    !clientPlayer.list[playerId].alive
+  )
+    return;
+  if (
     gameRoom &&
     Option.list[gameRoom] !== undefined &&
     !Option.list[gameRoom].start

@@ -81,6 +81,7 @@ var clientPlayer = function(config) {
   self.useSkill = false;
   self.target = null;
   self.useUlt = false;
+  self.alive = config.alive;
   // image
   self.character = new Image();
   self.skill = new Image();
