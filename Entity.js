@@ -340,6 +340,7 @@ class Player extends Element {
           }
           if (Enemy.list[i].life <= 0) {
             if (Player.list[this.id]) {
+              global.Rooms[Player.list[this.id].room].totalEnemies -= 1;
               this.frag += 1;
               this.score += 2;
               this.ult += 5;
@@ -545,6 +546,7 @@ class Player extends Element {
               }
               if (Enemy.list[i].life <= 0) {
                 if (Player.list[this.id]) {
+                  global.Rooms[Player.list[this.id].room].totalEnemies -= 1;
                   this.frag += 1;
                   this.score += 5;
                   this.ult += 5;
@@ -730,6 +732,7 @@ class Player extends Element {
               }
               if (Enemy.list[i].life <= 0) {
                 if (Player.list[this.id]) {
+                  global.Rooms[Player.list[this.id].room].totalEnemies -= 1;
                   this.frag += 1;
                   this.score += 5;
                   this.ult += 5;
@@ -1267,8 +1270,8 @@ class Enemy extends Element {
     }
     if (checkContinue !== undefined && !checkContinue) {
       for (var i in global.SOCKET_LIST) {
-        if (Player.list[i].room === Player.list[target].room){
-          global.SOCKET_LIST[i].emit("gameOver", {
+        if (Player.list[i].room === Player.list[target].room) {
+           global.SOCKET_LIST[i].emit("gameOver", {
             room: this.room
           });
         global.REMOVE_DATA.player.push(i);

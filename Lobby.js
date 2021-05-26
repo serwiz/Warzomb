@@ -25,6 +25,7 @@ class Lobby {
         this.maxFrag = 1;
         break;
       case "survival":
+        this.totalEnemies = 0;
         this.numberEnemies = Math.random() * 10 + 3;
         this.respawnTime = Math.random() * 10 + 5;
         this.wave = 1;

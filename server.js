@@ -58,10 +58,11 @@ app.post("/start", function(req, res) {
     if (!global.Rooms[req.body.room].spawnActivation) {
       global.Rooms[req.body.room].spawnId = setInterval(function() {
         if (
-          Object.keys(Entity.Enemy.list).length + 1 <=
+          global.Rooms[req.body.room].totalEnemies + 1 <=
             global.Rooms[req.body.room].numberEnemies &&
           Object.keys(Entity.Player.list).length
         ) {
+          global.Rooms[req.body.room].totalEnemies += 1;
           var e = Entity.Enemy.randomGenerateEnemy(req.body.room);
         }
       }, global.Rooms[req.body.room].respawnTime * 1000);
