@@ -169,64 +169,7 @@ socket.on("update", function(data) {
       if (data.player[i].frag !== undefined) player.frag = data.player[i].frag;
       if (data.player[i].alive !== undefined)
         player.alive = data.player[i].alive;
-      switch (player.class) {
-        case "warrior":
-          $(".skill1").css(
-            "background-image",
-            "url(" + "../tileset/images/sword_icon" + ")"
-          );
-          $(".skill2").css(
-            "background-image",
-            "url(" + "../tileset/images/lion_icon" + ")"
-          );
-          $(".skill3").css(
-            "background-image",
-            "url(" + "../tileset/images/berserk_icon" + ")"
-          );
-          break;
-        case "sorcerer":
-          $(".skill1").css(
-            "background-image",
-            "url(" + "../tileset/images/fireball_icon" + ")"
-          );
-          $(".skill2").css(
-            "background-image",
-            "url(" + "../tileset/images/sorc_icon" + ")"
-          );
-          $(".skill3").css(
-            "background-image",
-            "url(" + "../tileset/images/thunder_icon" + ")"
-          );
-          break;
-        case "archer":
-          $(".skill1").css(
-            "background-image",
-            "url(" + "../tileset/images/bow_icon" + ")"
-          );
-          $(".skill2").css(
-            "background-image",
-            "url(" + "../tileset/images/ranger_icon" + ")"
-          );
-          $(".skill3").css(
-            "background-image",
-            "url(" + "../tileset/images/arrow_icon" + ")"
-          );
-          break;
-        case "tank":
-          $(".skill1").css(
-            "background-image",
-            "url(" + "../tileset/images/mass_icon" + ")"
-          );
-          $(".skill2").css(
-            "background-image",
-            "url(" + "../tileset/images/snake_icon" + ")"
-          );
-          $(".skill3").css(
-            "background-image",
-            "url(" + "../tileset/images/shield_icon" + ")"
-          );
-          break;
-      }
+      
     }
   }
   if (data.projectile)
